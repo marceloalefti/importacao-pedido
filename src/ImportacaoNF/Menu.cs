@@ -44,7 +44,7 @@ namespace ImportacaoNF
 
                 // Create s sub menu
                 oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
-                oCreationPackage.UniqueID = "ImportacaoNF.Form1";
+                oCreationPackage.UniqueID = "ImportacaoNF.frmImportacao";
                 oCreationPackage.String = "Controle de importação";
                 oMenus.AddEx(oCreationPackage);
             }
@@ -60,9 +60,9 @@ namespace ImportacaoNF
 
             try
             {
-                if (pVal.BeforeAction && pVal.MenuUID == "ImportacaoNF.Form1")
+                if (pVal.BeforeAction && pVal.MenuUID == "ImportacaoNF.frmImportacao")
                 {
-                    Form1 activeForm = new Form1();
+                    frmImportacao activeForm = new frmImportacao();
                     activeForm.Show();
                 }
             }

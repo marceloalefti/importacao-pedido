@@ -8,15 +8,6 @@ namespace ImportacaoNF.Conexao
 {
     static class ConexaoSAP
     {
-
-        #region Identificação do Arquivo
-        /*********************************************/
-        /* Desenvolvimento VARSIS                    */
-        /* Data: 24/09/2020                          */
-        /* Responsável: Daniel Quintale de Jesus     */
-        /*********************************************/
-        #endregion
-
         public static SAPbouiCOM.Application oApplication;
 
         public static SAPbobsCOM.Company oCompany;
@@ -27,11 +18,8 @@ namespace ImportacaoNF.Conexao
 
         public static void SetApplication()
         {
-
             string sConnectionString = null;
-
             SboGuiApi = new SAPbouiCOM.SboGuiApi();
-
             sConnectionString = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
 
             try
@@ -46,12 +34,10 @@ namespace ImportacaoNF.Conexao
             }
 
             oApplication = SboGuiApi.GetApplication(-1);
-
         }
 
         public static void InitializeCompany()
         {
-
             int lRetCode;
 
             try
@@ -83,12 +69,8 @@ namespace ImportacaoNF.Conexao
             }
             catch (Exception e)
             {
-
                 oApplication.MessageBox(e.Message + e.StackTrace);
-
             }
-
         }
-
     }
 }

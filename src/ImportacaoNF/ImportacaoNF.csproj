@@ -48,12 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Form1.b1f">
+    <None Include="frmImportacao.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
     <Compile Include="Conexao\ConexaoSAP.cs" />
-    <Compile Include="Form1.b1f.cs">
-      <DependentUpon>Form1.b1f</DependentUpon>
+    <Compile Include="frmImportacao.b1f.cs">
+      <DependentUpon>frmImportacao.b1f</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Menu.cs" />
