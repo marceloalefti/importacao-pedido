@@ -109,7 +109,7 @@ namespace ImportacaoNF
             this.EditText13 = ((SAPbouiCOM.EditText)(this.GetItem("txtCodImp").Specific));
             string Hoje = DateTime.Now.ToShortDateString();
             this.EditText10.Value = Hoje;
-            
+
             //    Numero da Importação
             //this.EditText13.Value = this.RetornaNrImportacao();
             //this.ComboBox0.Select("Aberto", typeof(SAPbouiCOM.BoSearchKey).psk_ByDescription);
@@ -132,7 +132,7 @@ namespace ImportacaoNF
         {
             this.LoadAfter += new LoadAfterHandler(this.Form_LoadAfter);
         }
-               
+
 
         private void OnCustomInitialize()
         {
@@ -414,9 +414,7 @@ namespace ImportacaoNF
 
                     SAPbouiCOM.EditTextColumn colCodItem = (SAPbouiCOM.EditTextColumn)this.gridDados.Columns.Item("ItemCode");
                     colCodItem.LinkedObjectType = "4";
-
                 }
-
             }
             finally
             {
@@ -498,8 +496,8 @@ namespace ImportacaoNF
                                     " T1.U_TAXORDER as TaxRate, " +
                                     " T0.U_TAXVALLINE as TaxValLine " +
                                 " FROM " +
-                                    " \"@ALFT_IMPORT\" as T0 " +
-                                    " INNER JOIN \"@ALFT_IMPORT1\" AS T1 ON T1.U_DocEntry = T0.U_DocEntry " +
+                                    " [@ALFT_IMPORT] as T0 " +
+                                    " INNER JOIN [@ALFT_IMPORT1] AS T1 ON T1.U_DocEntry = T0.U_DocEntry " +
                                     " INNER JOIN OITM AS T2 ON T2.ItemCode = T1.U_CODPRODUTO " +
                                     " LEFT JOIN ONCM AS T3 ON T3.AbsEntry = T2.NcmCode " +
                                 " WHERE " +
@@ -599,7 +597,7 @@ namespace ImportacaoNF
                 SAPbouiCOM.Framework.Application.SBO_Application.Forms.ActiveForm.Freeze(false);
             }
         }
-        
+
         private void btnSalvar_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
@@ -756,7 +754,7 @@ namespace ImportacaoNF
                 BubbleEvent = false;
             }
         }
-        
+
         private void btnCalcular_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
@@ -1090,421 +1088,217 @@ namespace ImportacaoNF
 
         #region Methods
 
+        #region Repository
+
+        public string GetRecordsetAsString(string query)
+        {
+            Recordset recordset = null;
+
+            try
+            {
+                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
+                recordset.DoQuery(query);
+
+                if (!recordset.EoF)
+                    return recordset.Fields.Item(0).Value.ToString().Trim();
+
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (recordset != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(recordset);
+
+                recordset = null;
+            }
+        }
+
+        public void ExecuteQuery(string query)
+        {
+            Recordset recordset = null;
+
+            try
+            {
+                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
+                recordset.DoQuery(query);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (recordset != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(recordset);
+
+                recordset = null;
+            }
+        }
+
+        #endregion Repository
+
         #region SELECT
 
-        public static String RetornaFornecedor(int pDocEntry)
+        public string RetornaFornecedor(int docEntry)
         {
-            Recordset recordset = null;
-
-            try
-            {
-
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-                string query = "SELECT \"CardCode\" As CODFORNECEDOR FROM OPOR WHERE \"DocEntry\" = " + pDocEntry;
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("CODFORNECEDOR").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
+            return GetRecordsetAsString(String.Format("SELECT CardCode As CODFORNECEDOR FROM OPOR WHERE DocEntry = {0}", docEntry));
         }
 
-        public static String RetornaUtizacao(int pDocEntry)
+        public string RetornaUtizacao(int docEntry)
         {
-            Recordset recordset = null;
-
-            try
-            {
-
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-                string query = "SELECT \"MainUsage\" as UTILIZACAO FROM \"POR12\" WHERE \"DocEntry\" =" + pDocEntry;
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("UTILIZACAO").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
+            return GetRecordsetAsString(String.Format("SELECT MainUsage as UTILIZACAO FROM POR12 WHERE DocEntry = {0}", docEntry));
         }
 
-        public static String RetornaPedDocEntry(int pDocNum)
+        public string RetornaPedDocEntry(int docNum)
         {
-            Recordset recordset = null;
-
-            try
-            {
-
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-                string query = "SELECT \"DocEntry\" as CODIGO FROM \"OPOR\" WHERE \"DocNum\" =" + pDocNum;
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("CODIGO").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
-        }
-        
-        public static String RetornaDescItem(string pItemCode)
-        {
-            Recordset recordset = null;
-
-            try
-            {
-
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-                string query = "SELECT \"ItemName\" as DESCRICAO FROM \"OITM\" WHERE \"ItemCode\" = '" + pItemCode + "'";
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("DESCRICAO").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
-        }
-        
-        public static String RetornaCodImposto(int pDocEntry, int pLineNum)
-        {
-            Recordset recordset = null;
-
-            try
-            {
-
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-                string query = "SELECT \"POR1\".\"TaxCode\" as TAXCODE FROM \"OPOR\" INNER JOIN \"POR1\" ON \"POR1\".\"DocEntry\" = \"OPOR\".\"DocEntry\" WHERE \"POR1\".\"DocEntry\" =" + pDocEntry + " AND \"POR1\".\"LineNum\" =" + pLineNum;
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("TAXCODE").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
-        }
-        
-        public static String RetornaCodDraft()
-        {
-            Recordset recordset = null;
-
-            try
-            {
-
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-                string query = "SELECT TOP 1 \"DocEntry\" as CODIGO FROM \"ODRF\" ORDER BY \"DocEntry\" DESC";
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("CODIGO").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
-        }
-        
-        public static String RetornaCodeLog()
-        {
-            Recordset recordset = null;
-
-            try
-            {
-
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-                string query = "SELECT Top 1 Convert(int, Code) + 1 AS NEWCODE FROM \"@ALFT_IMPORT\" order by Convert(int,code) desc";
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("NEWCODE").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
-        }
-        
-        public static String RetornaCodeLogLinha()
-        {
-            Recordset recordset = null;
-
-            try
-            {
-
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-                string query = "SELECT TOP 1 CONVERT(int, Code) as Codigo FROM \"@ALFT_IMPORT1\" order by Codigo desc ";
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("Codigo").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
+            return GetRecordsetAsString(String.Format("SELECT DocEntry as CODIGO FROM OPOR WHERE DocNum = {0}", docNum));
         }
 
-        public static String RetornaNrImportacao()
+        public string RetornaDescItem(string itemCode)
         {
-            Recordset recordset = null;
-
-            try
-            {
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-
-                string query = "SELECT TOP 1 (\"U_DocEntry\")+1 AS NRIMPORT FROM \"@ALFT_IMPORT\" order by Convert(int,code) desc";
-                //string query = "SELECT MAX(\"U_DocEntry\")+1 AS NRIMPORT FROM \"@ALFT_IMPORT\"";
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("NRIMPORT").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
+            return GetRecordsetAsString(String.Format("SELECT ItemName as DESCRICAO FROM OITM WHERE ItemCode = '{0}'", itemCode));
         }
 
-        public static String RetornaExisteImportacao(int pDocEntry)
+        public string RetornaCodImposto(int docEntry, int lineNum)
         {
-            Recordset recordset = null;
-
-            try
-            {
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
-
-                string query = "SELECT ISNULL(\"U_DocEntry\",0) AS NRIMPORT FROM \"@ALFT_IMPORT\" WHERE \"U_DocEntry\" = " + pDocEntry;
-
-                recordset.DoQuery(query);
-
-                if (!recordset.EoF)
-                {
-                    return recordset.Fields.Item("NRIMPORT").Value.ToString().Trim();
-                }
-            }
-            catch { }
-            finally
-            {
-                recordset = null;
-            }
-
-            return String.Empty;
+            return GetRecordsetAsString(String.Format("SELECT POR1.TaxCode as TAXCODE FROM OPOR INNER JOIN POR1 ON POR1.DocEntry = OPOR.DocEntry WHERE POR1.DocEntry = {0} AND POR1.LineNum = {1}", docEntry, lineNum));
         }
-        
+
+        public string RetornaCodDraft()
+        {
+            return GetRecordsetAsString("SELECT TOP 1 DocEntry as CODIGO FROM ODRF ORDER BY DocEntry DESC");
+        }
+
+        public string RetornaCodeLog()
+        {
+            return GetRecordsetAsString("SELECT Top 1 Convert(int, Code) + 1 AS NEWCODE FROM [@ALFT_IMPORT] order by Convert(int,code) desc");
+        }
+
+        public string RetornaCodeLogLinha()
+        {
+            return GetRecordsetAsString("SELECT TOP 1 CONVERT(int, Code) as Codigo FROM [@ALFT_IMPORT1] order by Codigo desc ");
+        }
+
+        public string RetornaNrImportacao()
+        {
+            return GetRecordsetAsString("SELECT TOP 1 (U_DocEntry)+1 AS NRIMPORT FROM [@ALFT_IMPORT] order by Convert(int,code) desc");
+        }
+
+        public string RetornaExisteImportacao(int docEntry)
+        {
+            return GetRecordsetAsString(String.Format("SELECT ISNULL(U_DocEntry,0) AS NRIMPORT FROM [@ALFT_IMPORT] WHERE U_DocEntry = {0}", docEntry));
+        }
+
         #endregion Consultas
 
         #region Insert
 
-        public static void InserirCabecalhoImportacao(int pDocEntry, double pTxId, double pFrtInt, double pOtrDesp, double pContainer, double pTotalPeso, double pTotalMe, double pTotal, string pStatus, string pData, double pTotalII)
+        public void InserirCabecalhoImportacao(int pDocEntry, double pTxId, double pFrtInt, double pOtrDesp, double pContainer, double pTotalPeso, double pTotalMe, double pTotal, string pStatus, string pData, double pTotalII)
         {
-            var ret = 0;
-            Recordset oRs = null;
-
-            try
+            string code;
+            string vDocEntry;
+            if (pDocEntry == 0)
             {
-                oRs = ((Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset));
-                string code;
-                string vDocEntry;
-                if (pDocEntry == 0)
-                {
-                    code = RetornaCodeLog();
-                    vDocEntry = code;
-                }
-                else
-                {
-                    int Retorno = Int32.Parse(RetornaCodeLog()) + 1;
-                    code = Retorno.ToString();
-                    vDocEntry = pDocEntry.ToString();
-                }
-                var sql = "insert into \"@ALFT_IMPORT\" values(\'" + code + "\',\'" + code + "\',\'" + vDocEntry + "\', " + pTxId.ToString().Replace(",", ".") + ", " + pFrtInt.ToString().Replace(",", ".") + ", " + pOtrDesp.ToString().Replace(",", ".") + ", " + pContainer.ToString().Replace(",", ".") + ", " + pTotalPeso.ToString().Replace(",", ".") + ", " + pTotalMe.ToString().Replace(",", ".") + ", " + pTotal.ToString().Replace(",", ".") + ", \'" + pStatus + "\',\'" + pData + "\', " + pTotalII.ToString().Replace(",", ".") + ")";
-
-                oRs.DoQuery(sql);
-
+                code = RetornaCodeLog();
+                vDocEntry = code;
             }
-            catch (Exception ex)
+            else
             {
-                throw;
+                int Retorno = Int32.Parse(RetornaCodeLog()) + 1;
+                code = Retorno.ToString();
+                vDocEntry = pDocEntry.ToString();
             }
-            finally
-            {
-                if (oRs != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(oRs);
-            }
+
+            var insertQuery = String.Format("INSERT INTO [@ALFT_IMPORT] " +
+                              "VALUES('{0}', '{0}', '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, '{9}', '{10}', {11})",
+                                       code, vDocEntry, ParseAndTrim(pTxId), ParseAndTrim(pFrtInt), ParseAndTrim(pOtrDesp), ParseAndTrim(pContainer), ParseAndTrim(pTotalPeso), ParseAndTrim(pTotalMe),
+                                       ParseAndTrim(pTotal), pStatus, pData, ParseAndTrim(pTotalII));
+
+            ExecuteQuery(insertQuery);
         }
 
-        public static void InserirLinhaImportacao(int pDocEntry, int pPedido, string pProduto, string pDescricao, double pPreco, double pPrecoTotal, double pQtdPedida, double pQtdAberta, double pQtdFat, string pUm, double pPeso, double pFrete, double pOutraDesp, int pItmUm, string pDeposito, int pPedNumDoc, int pLinPed, int pVisOrder, double pTaxOrder)
+        public static string ParseAndTrim(double value)
         {
-            var ret = 0;
-            Recordset oRs = null;
+            return value.ToString().Replace(",", ".");
+        }
 
-            try
+        public void InserirLinhaImportacao(int pDocEntry, int pPedido, string pProduto, string pDescricao, double pPreco, double pPrecoTotal, double pQtdPedida, double pQtdAberta, double pQtdFat, string pUm, double pPeso, double pFrete, double pOutraDesp, int pItmUm, string pDeposito, int pPedNumDoc, int pLinPed, int pVisOrder, double pTaxOrder)
+        {
+            int code;
+            int vDocEntry;
+            int codelinha;
+            if (pDocEntry == 0)
             {
-                oRs = ((Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset));
-                int code;
-                int vDocEntry;
-                int codelinha;
-                if (pDocEntry == 0)
-                {
-                    string Retorno = RetornaCodeLogLinha();
-                    if (Retorno != "")
-                    {
-                        codelinha = Int32.Parse(RetornaCodeLogLinha()) + 1;
-                    }
-                    else
-                    {
-                        codelinha = 1;
-                    }
-
-                    code = Int32.Parse(RetornaCodeLog());
-                    vDocEntry = code - 1;
-
-                }
-                else
+                string Retorno = RetornaCodeLogLinha();
+                if (Retorno != "")
                 {
                     codelinha = Int32.Parse(RetornaCodeLogLinha()) + 1;
-                    //code = Int32.Parse(RetornaCodeLog());
-                    vDocEntry = pDocEntry;
+                }
+                else
+                {
+                    codelinha = 1;
                 }
 
-                var sql = "insert into \"@ALFT_IMPORT1\" values(\'" + codelinha + "\',\'" + codelinha + "\',\'" + vDocEntry + "\',\'" + pPedido + "\',\'" + pProduto + "\',\'" + pDescricao + "\', " + pPreco.ToString().Replace(",", ".") + ", " + pPrecoTotal.ToString().Replace(",", ".") + ", " + pQtdPedida.ToString().Replace(",", ".") + ", " + pQtdAberta.ToString().Replace(",", ".") + ", " + pQtdFat.ToString().Replace(",", ".") + ", \'" + pUm + "\', " + pPeso.ToString().Replace(",", ".") + ", " + pFrete.ToString().Replace(",", ".") + " , " + pOutraDesp.ToString().Replace(",", ".") + ",\'" + pItmUm + "\',\'" + pDeposito + "\',\'" + pPedNumDoc + "\',\'" + pLinPed + "\',\'" + pVisOrder + "\', " + pTaxOrder.ToString().Replace(",", ".") + ")";
-                oRs.DoQuery(sql);
+                code = Int32.Parse(RetornaCodeLog());
+                vDocEntry = code - 1;
+
             }
-            catch (Exception ex)
+            else
             {
-                throw;
+                codelinha = Int32.Parse(RetornaCodeLogLinha()) + 1;
+                //code = Int32.Parse(RetornaCodeLog());
+                vDocEntry = pDocEntry;
             }
-            finally
-            {
-                if (oRs != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(oRs);
-            }
-        }
 
-        #endregion  
-      
-        #region Delete
+            var insertQuery = "insert into [@ALFT_IMPORT1] values(\'" + codelinha + "\',\'" + codelinha + "\',\'" + vDocEntry + "\',\'" + pPedido + "\',\'" + pProduto + "\',\'" + pDescricao + "\', " + pPreco.ToString().Replace(",", ".") + ", " + pPrecoTotal.ToString().Replace(",", ".") + ", " + pQtdPedida.ToString().Replace(",", ".") + ", " + pQtdAberta.ToString().Replace(",", ".") + ", " + pQtdFat.ToString().Replace(",", ".") + ", \'" + pUm + "\', " + pPeso.ToString().Replace(",", ".") + ", " + pFrete.ToString().Replace(",", ".") + " , " + pOutraDesp.ToString().Replace(",", ".") + ",\'" + pItmUm + "\',\'" + pDeposito + "\',\'" + pPedNumDoc + "\',\'" + pLinPed + "\',\'" + pVisOrder + "\', " + pTaxOrder.ToString().Replace(",", ".") + ")";
+            ExecuteQuery(insertQuery);
 
-        public static void DeleteCabecalhoImportacao(int vDocEntry)
-        {
-            var ret = 0;
-            Recordset oRs = null;
-
-            try
-            {
-                oRs = ((Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset));
-                string code = RetornaCodeLog();
-
-                var sql = "DELETE FROM \"@ALFT_IMPORT\" WHERE \"U_DocEntry\" = " + vDocEntry;
-                //SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("3 " + sql);
-                oRs.DoQuery(sql);
-
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            finally
-            {
-                if (oRs != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(oRs);
-            }
-        }
-
-        public static void DeleteLinhaImportacao(int vDocEntry)
-        {
-            var ret = 0;
-            Recordset oRs = null;
-
-            try
-            {
-                oRs = ((Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset));
-                string code = RetornaCodeLog();
-
-                var sql = "DELETE FROM \"@ALFT_IMPORT1\" WHERE \"U_DocEntry\" = " + vDocEntry;
-                //SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("3 " + sql);
-                oRs.DoQuery(sql);
-
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            finally
-            {
-                if (oRs != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(oRs);
-            }
         }
 
         #endregion
-        
-        #endregion Methods        
+
+        #region Delete
+
+        public void DeleteCabecalhoImportacao(int vDocEntry)
+        {
+            var ret = 0;
+            Recordset oRs = null;
+
+            try
+            {
+                oRs = ((Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset));
+                string code = RetornaCodeLog();
+
+                var sql = "DELETE FROM [@ALFT_IMPORT] WHERE U_DocEntry = " + vDocEntry;
+                //SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("3 " + sql);
+                oRs.DoQuery(sql);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (oRs != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(oRs);
+            }
+        }
+
+        public void DeleteLinhaImportacao(int vDocEntry)
+        {
+            string code = RetornaCodeLog();
+
+            var query = "DELETE FROM [@ALFT_IMPORT1] WHERE U_DocEntry = " + vDocEntry;
+            //SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("3 " + sql);
+            ExecuteQuery(query);
+        }
+
+        #endregion
+
+        #endregion Methods
     }
 }
