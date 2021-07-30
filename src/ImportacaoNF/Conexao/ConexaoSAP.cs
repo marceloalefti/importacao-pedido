@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImportacaoNF.Conexao
+namespace SLT.ImportacaoNF.Conexao
 {
     static class ConexaoSAP
     {
         public static SAPbouiCOM.Application oApplication;
 
-        public static SAPbobsCOM.Company oCompany;
+        public static SAPbobsCOM.Company Company;
 
         public static SAPbouiCOM.SboGuiApi SboGuiApi = null;
 
@@ -48,21 +48,21 @@ namespace ImportacaoNF.Conexao
                 string sCookie = null;
                 string sConnectionContext = null;
 
-                oCompany = new SAPbobsCOM.Company();
+                Company = new SAPbobsCOM.Company();
 
                 //oCompany.language = SAPbobsCOM.BoSuppLangs.ln_Portuguese_Br;
-                sCookie = oCompany.GetContextCookie();
+                sCookie = Company.GetContextCookie();
                 sConnectionContext = oApplication.Company.GetConnectionContext(sCookie);
 
-                if (oCompany.Connected == true)
+                if (Company.Connected == true)
                 {
-                    oCompany.Disconnect();
+                    Company.Disconnect();
                 }
 
                 //oApplication.StatusBar.SetText("Inicializando Companhia", SAPbouiCOM.BoMessageTime.bmt_Short, (SAPbouiCOM.BoStatusBarMessageType)SAPbouiCOM.BoStatusBarMessageType.smt_Warning)
-                setConnectionContextReturn = oCompany.SetSboLoginContext(sConnectionContext);
+                setConnectionContextReturn = Company.SetSboLoginContext(sConnectionContext);
                 oCompanyConnected = true;
-                lRetCode = oCompany.Connect();
+                lRetCode = Company.Connect();
 
                 return;
 

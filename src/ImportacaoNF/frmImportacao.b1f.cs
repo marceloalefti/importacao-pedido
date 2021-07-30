@@ -6,59 +6,60 @@ using Microsoft.SqlServer.Server;
 using SAPbouiCOM.Framework;
 using SAPbobsCOM;
 using SAPbouiCOM;
+using SLT.ImportacaoNF.Conexao;
 
-namespace ImportacaoNF
+namespace SLT.ImportacaoNF
 {
-    [FormAttribute("ImportacaoNF.frmImportacao", "frmImportacao.b1f")]
+    [FormAttribute("SLT.ImportacaoNF.frmImportacao", "frmImportacao.b1f")]
     class frmImportacao : UserFormBase
     {
         #region Attributes
 
         private SAPbouiCOM.DataTable dtDados;
-        private SAPbouiCOM.StaticText StaticText0;
-        private SAPbouiCOM.EditText EditText0;
+        private SAPbouiCOM.StaticText lblProcesso;
+        private SAPbouiCOM.EditText txtProcesso;
         private SAPbouiCOM.StaticText StaticText1;
-        private SAPbouiCOM.EditText EditText2;
+        private SAPbouiCOM.EditText txtCodigoPedido;
 
         private SAPbouiCOM.StaticText StaticText2;
         private SAPbouiCOM.StaticText StaticText3;
-        private SAPbouiCOM.EditText EditText4;
+        private SAPbouiCOM.EditText txtTaxaDI;
         private SAPbouiCOM.Button btnSalvar;
         private SAPbouiCOM.Button btnGerarNF;
         private SAPbouiCOM.StaticText StaticText5;
-        private SAPbouiCOM.EditText EditText6;
+        private SAPbouiCOM.EditText txtFreteInternacional;
         private SAPbouiCOM.StaticText StaticText6;
-        private SAPbouiCOM.EditText EditText7;
+        private SAPbouiCOM.EditText txtContainer;
         private SAPbouiCOM.Button btnPesquisar;
 
         private StaticText StaticText7;
         private StaticText StaticText8;
         private StaticText StaticText9;
-        private EditText EditText1;
-        private EditText EditText5;
-        private EditText EditText8;
+        private EditText txtPeso;
+        private EditText txtTotalFOB;
+        private EditText txtTotalRS;
 
         private StaticText StaticText4;
-        private EditText EditText3;
-        private EditText EditText9;
+        private EditText txtOutraDespesa;
+        private EditText txtCodePN;
         private Button btnCalcular;
         private Button btnCancelar;
 
         private StaticText StaticText10;
         private ComboBox ComboBox0;
         private StaticText StaticText11;
-        private EditText EditText10;
+        private EditText txtDataDocumento;
 
-        private EditText EditText13;
+        //private EditText txtCodImp;
         private StaticText StaticText12;
         private StaticText StaticText14;
-        private EditText EditText12;
+        private EditText txtCodigoImportacao;
         private Button btnCarregar;
 
         private SAPbouiCOM.Grid gridDados;
 
         private StaticText StaticText13;
-        private EditText EditText11;
+        private EditText txtTotal_II;
 
         #endregion attributes
 
@@ -71,27 +72,27 @@ namespace ImportacaoNF
         /// </summary>
         public override void OnInitializeComponent()
         {
-            this.StaticText0 = ((SAPbouiCOM.StaticText)(this.GetItem("lblProc").Specific));
-            this.EditText0 = ((SAPbouiCOM.EditText)(this.GetItem("txtProc").Specific));
+            this.lblProcesso = ((SAPbouiCOM.StaticText)(this.GetItem("lblProc").Specific));
+            this.txtProcesso = ((SAPbouiCOM.EditText)(this.GetItem("txtProces").Specific));
             this.StaticText1 = ((SAPbouiCOM.StaticText)(this.GetItem("lblPed").Specific));
-            this.EditText2 = ((SAPbouiCOM.EditText)(this.GetItem("txtPedido").Specific));
+            this.txtCodigoPedido = ((SAPbouiCOM.EditText)(this.GetItem("txtPedido").Specific));
             this.StaticText2 = ((SAPbouiCOM.StaticText)(this.GetItem("lblCdPN").Specific));
             this.StaticText3 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_10").Specific));
-            this.EditText4 = ((SAPbouiCOM.EditText)(this.GetItem("txtTxID").Specific));
+            this.txtTaxaDI = ((SAPbouiCOM.EditText)(this.GetItem("txtTxID").Specific));
             this.btnSalvar = ((SAPbouiCOM.Button)(this.GetItem("Item_12").Specific));
             this.btnSalvar.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSalvar_ClickBefore);
             this.btnGerarNF = ((SAPbouiCOM.Button)(this.GetItem("Item_13").Specific));
             this.btnGerarNF.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnGerarNF_ClickBefore);
             this.StaticText5 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_16").Specific));
-            this.EditText6 = ((SAPbouiCOM.EditText)(this.GetItem("txtFrtInt").Specific));
+            this.txtFreteInternacional = ((SAPbouiCOM.EditText)(this.GetItem("txtFrtInt").Specific));
             this.StaticText6 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_18").Specific));
-            this.EditText7 = ((SAPbouiCOM.EditText)(this.GetItem("txtConta").Specific));
-            this.btnPesquisar = ((SAPbouiCOM.Button)(this.GetItem("btnPesquisar").Specific));
+            this.txtContainer = ((SAPbouiCOM.EditText)(this.GetItem("txtConta").Specific));
+            this.btnPesquisar = ((SAPbouiCOM.Button)(this.GetItem("Item_2").Specific));
             this.btnPesquisar.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnPesquisar_ClickBefore);
             this.gridDados = ((SAPbouiCOM.Grid)(this.GetItem("gridDados").Specific));
             this.StaticText4 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_0").Specific));
-            this.EditText3 = ((SAPbouiCOM.EditText)(this.GetItem("txtODesp").Specific));
-            this.EditText9 = ((SAPbouiCOM.EditText)(this.GetItem("txtCodPN").Specific));
+            this.txtOutraDespesa = ((SAPbouiCOM.EditText)(this.GetItem("txtODesp").Specific));
+            this.txtCodePN = ((SAPbouiCOM.EditText)(this.GetItem("txtCodPN").Specific));
             this.btnCalcular = ((SAPbouiCOM.Button)(this.GetItem("Item_1").Specific));
             this.btnCalcular.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCalcular_ClickBefore);
             this.btnCancelar = ((SAPbouiCOM.Button)(this.GetItem("Item_3").Specific));
@@ -99,28 +100,28 @@ namespace ImportacaoNF
             this.StaticText7 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_6").Specific));
             this.StaticText8 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_7").Specific));
             this.StaticText9 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_8").Specific));
-            this.EditText1 = ((SAPbouiCOM.EditText)(this.GetItem("Item_9").Specific));
-            this.EditText5 = ((SAPbouiCOM.EditText)(this.GetItem("Item_11").Specific));
-            this.EditText8 = ((SAPbouiCOM.EditText)(this.GetItem("Item_14").Specific));
+            this.txtPeso = ((SAPbouiCOM.EditText)(this.GetItem("Item_9").Specific));
+            this.txtTotalFOB = ((SAPbouiCOM.EditText)(this.GetItem("Item_11").Specific));
+            this.txtTotalRS = ((SAPbouiCOM.EditText)(this.GetItem("Item_14").Specific));
             this.StaticText10 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_4").Specific));
             this.ComboBox0 = ((SAPbouiCOM.ComboBox)(this.GetItem("Item_5").Specific));
             this.StaticText11 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_15").Specific));
-            this.EditText10 = ((SAPbouiCOM.EditText)(this.GetItem("Item_17").Specific));
-            this.EditText13 = ((SAPbouiCOM.EditText)(this.GetItem("txtCodImp").Specific));
-            string Hoje = DateTime.Now.ToShortDateString();
-            this.EditText10.Value = Hoje;
+            this.txtDataDocumento = ((SAPbouiCOM.EditText)(this.GetItem("Item_17").Specific));
+            //this.txtCodImp = ((SAPbouiCOM.EditText)(this.GetItem("txtCodImp").Specific));
+
+            this.txtDataDocumento.Value = DateTime.Now.ToShortDateString();
 
             //    Numero da Importação
-            //this.EditText13.Value = this.RetornaNrImportacao();
+            //this.txtCodImp.Value = this.RetornaNrImportacao();
             //this.ComboBox0.Select("Aberto", typeof(SAPbouiCOM.BoSearchKey).psk_ByDescription);
 
             this.StaticText12 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_19").Specific));
             this.StaticText14 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_21").Specific));
-            this.EditText12 = ((SAPbouiCOM.EditText)(this.GetItem("Item_20").Specific));
-            this.btnCarregar = ((SAPbouiCOM.Button)(this.GetItem("btnCarregar").Specific));
+            this.txtCodigoImportacao = ((SAPbouiCOM.EditText)(this.GetItem("Item_20").Specific));
+            this.btnCarregar = ((SAPbouiCOM.Button)(this.GetItem("btnCarreg").Specific));
             this.btnCarregar.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCarregar_ClickBefore);
             this.StaticText13 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_23").Specific));
-            this.EditText11 = ((SAPbouiCOM.EditText)(this.GetItem("Item_24").Specific));
+            this.txtTotal_II = ((SAPbouiCOM.EditText)(this.GetItem("Item_24").Specific));
             this.OnCustomInitialize();
 
         }
@@ -163,258 +164,54 @@ namespace ImportacaoNF
 
             try
             {
-                //SAPbobsCOM.Company oCompany = (SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany();
-                SAPbobsCOM.Recordset oRSet = (SAPbobsCOM.Recordset)Program._Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-
                 SAPbouiCOM.Framework.Application.SBO_Application.Forms.ActiveForm.Freeze(true);
 
-                string Query = "";
-                string vCodPn = EditText9.Value;
-                string vCodPedido = EditText2.Value;
-                string vCodProcesso = EditText0.Value;
-                string vCodImp = EditText12.Value;
+                string vCodPn = txtCodePN.Value;
+                string vCodPedido = txtCodigoPedido.Value;
+                string vCodProcesso = txtProcesso.Value;
+                string vCodImp = txtCodigoImportacao.Value;
+                string queryPesquisar = QueryPesquisar(vCodPn, vCodPedido, vCodProcesso);
 
+                SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText("Executando a consulta...", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
+                this.dtDados.Rows.Clear();
 
-                if ((vCodPn != "") && (vCodPedido != "") && (vCodProcesso != ""))
+                SAPbobsCOM.Recordset oRSet = (SAPbobsCOM.Recordset)ConexaoSAP.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                oRSet.DoQuery(queryPesquisar);
+
+                if (oRSet.RecordCount == 0)
                 {
-                    Query = "SELECT " +
-                                "POR1.LineNum, " +
-                                "OPOR.DocEntry, " +
-                                "OPOR.DocNum, " +
-                                "POR1.ItemCode, " +
-                                "POR1.Dscription, " +
-                                "POR1.Price, " +
-                                "POR1.TotalFrgn as LineTotal, " +
-                                "POR1.Quantity, " +
-                                "POR1.OpenQty, " +
-                                "POR1.unitMsr, " +
-                                "POR1.Weight1 as Peso, " +
-                                "POR1.NumPerMsr, " +
-                                "ONCM.NcmCode, " +
-                                "Por1.VisOrder, " +
-                                "ISNULL(POR4.TaxRate,1) AS TaxRate" +
-                            " FROM OPOR " +
-                                " INNER JOIN POR1 ON POR1.DocEntry = OPOR.DocEntry " +
-                                " INNER JOIN OITM ON OITM.ItemCode = POR1.ItemCode " +
-                                " LEFT JOIN POR4 ON POR1.DocEntry = POR4.DocEntry and POR1.LineNum = POR4.LineNum and POR4.staType = 23 " +
-                                " LEFT JOIN ONCM ON ONCM.AbsEntry = OITM.NcmCode " +
-                            " WHERE " +
-                                " OPOR.DocStatus <> 'C'" +
-                                " AND POR1.LineStatus <> 'C'" +
-                                " AND POR1.Currency <> 'R$' " +
-                                " AND OPOR.CardCode = '" + vCodPn + "'" +
-                                " AND OPOR.DocNum = " + vCodPedido +
-                                " AND OPOR.U_ALFT_NumPrc = " + vCodProcesso +
-                            " ORDER BY " +
-                                " OPOR.DocNum desc, " +
-                                " Por1.VisOrder asc ";
-                }
-                else
-                {
-                    if ((vCodPn != "") && (vCodPedido != ""))
-                    {
-                        Query = "SELECT " +
-                                    "POR1.LineNum, " +
-                                    "OPOR.DocEntry, " +
-                                    "OPOR.DocNum, " +
-                                    "POR1.ItemCode, " +
-                                    "POR1.Dscription, " +
-                                    "POR1.Price, " +
-                                    "POR1.TotalFrgn as LineTotal, " +
-                                    "POR1.Quantity, " +
-                                    "POR1.OpenQty, " +
-                                    "POR1.unitMsr, " +
-                                    "POR1.Weight1 as Peso, " +
-                                    "POR1.NumPerMsr, " +
-                                    "ONCM.NcmCode, " +
-                                    "Por1.VisOrder, " +
-                                    "ISNULL(POR4.TaxRate,1) AS TaxRate" +
-                                " FROM OPOR " +
-                                    " INNER JOIN POR1 ON POR1.DocEntry = OPOR.DocEntry " +
-                                    " INNER JOIN OITM ON OITM.ItemCode = POR1.ItemCode " +
-                                    " LEFT JOIN POR4 ON POR1.DocEntry = POR4.DocEntry and POR1.LineNum = POR4.LineNum and POR4.staType = 23 " +
-                                    " LEFT JOIN ONCM ON ONCM.AbsEntry = OITM.NcmCode " +
-                                " WHERE " +
-                                    " OPOR.DocStatus <> 'C'" +
-                                    " AND POR1.LineStatus <> 'C'" +
-                                    " AND POR1.Currency <> 'R$' " +
-                                    " AND OPOR.CardCode = '" + vCodPn + "'" +
-                                    " AND OPOR.DocNum = " + vCodPedido +
-                                " ORDER BY " +
-                                    " OPOR.DocNum desc, " +
-                                    " Por1.VisOrder asc ";
-                    }
-                    else
-                    {
-                        if ((vCodPn != ""))
-                        {
-                            Query = "SELECT " +
-                                        "POR1.LineNum, " +
-                                        "OPOR.DocEntry, " +
-                                        "OPOR.DocNum, " +
-                                        "POR1.ItemCode, " +
-                                        "POR1.Dscription, " +
-                                        "POR1.Price, " +
-                                        "POR1.TotalFrgn as LineTotal, " +
-                                        "POR1.Quantity, " +
-                                        "POR1.OpenQty, " +
-                                        "POR1.unitMsr, " +
-                                        "POR1.Weight1 as Peso, " +
-                                        "POR1.NumPerMsr, " +
-                                        "ONCM.NcmCode, " +
-                                        "Por1.VisOrder, " +
-                                        "ISNULL(POR4.TaxRate,1) AS TaxRate" +
-                                    " FROM OPOR " +
-                                        " INNER JOIN POR1 ON POR1.DocEntry = OPOR.DocEntry " +
-                                        " INNER JOIN OITM ON OITM.ItemCode = POR1.ItemCode " +
-                                        " LEFT JOIN POR4 ON POR1.DocEntry = POR4.DocEntry and POR1.LineNum = POR4.LineNum and POR4.staType = 23 " +
-                                        " LEFT JOIN ONCM ON ONCM.AbsEntry = OITM.NcmCode " +
-                                    " WHERE " +
-                                        " OPOR.DocStatus <> 'C'" +
-                                        " AND POR1.LineStatus <> 'C'" +
-                                        " AND POR1.Currency <> 'R$' " +
-                                        " AND OPOR.CardCode = '" + vCodPn + "'" +
-                                    " ORDER BY " +
-                                        " OPOR.DocNum desc, " +
-                                        " Por1.VisOrder asc ";
-                        }
-                        else
-                        {
-                            if (vCodPedido != "")
-                            {
-                                Query = "SELECT " +
-                                            "POR1.LineNum, " +
-                                            "OPOR.DocEntry, " +
-                                            "OPOR.DocNum, " +
-                                            "POR1.ItemCode, " +
-                                            "POR1.Dscription, " +
-                                            "POR1.Price, " +
-                                            "POR1.TotalFrgn as LineTotal, " +
-                                            "POR1.Quantity, " +
-                                            "POR1.OpenQty, " +
-                                            "POR1.unitMsr, " +
-                                            "POR1.Weight1 as Peso, " +
-                                            "POR1.NumPerMsr, " +
-                                            "ONCM.NcmCode, " +
-                                            "Por1.VisOrder, " +
-                                            "ISNULL(POR4.TaxRate,1) AS TaxRate" +
-                                        " FROM OPOR " +
-                                            " INNER JOIN POR1 ON POR1.DocEntry = OPOR.DocEntry " +
-                                            " INNER JOIN OITM ON OITM.ItemCode = POR1.ItemCode " +
-                                            " LEFT JOIN POR4 ON POR1.DocEntry = POR4.DocEntry and POR1.LineNum = POR4.LineNum and POR4.staType = 23 " +
-                                            " LEFT JOIN ONCM ON ONCM.AbsEntry = OITM.NcmCode " +
-                                        " WHERE " +
-                                            " OPOR.DocStatus <> 'C'" +
-                                            " AND POR1.LineStatus <> 'C'" +
-                                            " AND POR1.Currency <> 'R$' " +
-                                            " AND OPOR.DocNum= " + vCodPedido +
-                                        " ORDER BY " +
-                                            " OPOR.DocNum desc, " +
-                                            " Por1.VisOrder asc ";
-                            }
-                            else
-                            {
-                                if (vCodProcesso != "")
-                                {
-                                    Query = "SELECT " +
-                                                "POR1.LineNum, " +
-                                                "OPOR.DocEntry, " +
-                                                "OPOR.DocNum, " +
-                                                "POR1.ItemCode, " +
-                                                "POR1.Dscription, " +
-                                                "POR1.Price, " +
-                                                "POR1.TotalFrgn as LineTotal, " +
-                                                "POR1.Quantity, " +
-                                                "POR1.OpenQty, " +
-                                                "POR1.unitMsr, " +
-                                                "POR1.Weight1 as Peso, " +
-                                                "POR1.NumPerMsr, " +
-                                                "ONCM.NcmCode, " +
-                                                "Por1.VisOrder, " +
-                                                "ISNULL(POR4.TaxRate,1)" +
-                                            " FROM OPOR " +
-                                                " INNER JOIN POR1 ON POR1.DocEntry = OPOR.DocEntry " +
-                                                " INNER JOIN OITM ON OITM.ItemCode = POR1.ItemCode " +
-                                                " LEFT JOIN POR4 ON POR1.DocEntry = POR4.DocEntry and POR1.LineNum = POR4.LineNum and POR4.staType = 23 " +
-                                                " LEFT JOIN ONCM ON ONCM.AbsEntry = OITM.NcmCode " +
-                                            " WHERE " +
-                                                " OPOR.DocStatus <> 'C'" +
-                                                " AND POR1.LineStatus <> 'C'" +
-                                                " AND POR1.Currency <> 'R$' " +
-                                                " AND OPOR.U_ALFT_NumPrc = " + vCodProcesso +
-                                            " ORDER BY " +
-                                                " OPOR.DocNum desc, " +
-                                                " Por1.VisOrder asc ";
-                                }
-                                else
-                                {
-                                    Query = "";
-                                }
-                            }
-
-                        }
-                    }
+                    SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText("Nenhum registro encontrado!", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
+                    return;
                 }
 
-                oRSet.DoQuery(Query);
-                if (oRSet.RecordCount > 0)
-                {
-                    this.dtDados.Rows.Clear();
+                SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText("Consulta concluida, processando os dados para a exibição...", BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning);
 
-                    /*                    while (!oRSet.EoF)
-                                        {
-                                            this.dtDados.Rows.Add();
-                                            int i = this.dtDados.Rows.Count - 1;
 
-                                            this.dtDados.SetValue("DocEntry", i, oRSet.Fields.Item("DocEntry").Value);
-                                            this.dtDados.SetValue("DocNum", i, oRSet.Fields.Item("DocNum").Value);
-                                            this.dtDados.SetValue("VisOrder", i, oRSet.Fields.Item("VisOrder").Value);
-                                            this.dtDados.SetValue("NcmCode", i, oRSet.Fields.Item("NcmCode").Value);
-                                            this.dtDados.SetValue("ItemCode", i, oRSet.Fields.Item("ItemCode").Value);
-                                            this.dtDados.SetValue("Dscription", i, "");//RetornaDescItem(oRSet.Fields.Item("ItemCode").Value));
-                                            //Double vPrice = (oRSet.Fields.Item("Price").Value);
-                                            this.dtDados.SetValue("Price", i, oRSet.Fields.Item("Price").Value);// vPrice.ToString("N4"));
-                                            //Double vLineTotal = (oRSet.Fields.Item("LineTotal").Value);
-                                            this.dtDados.SetValue("LineTotal", i,oRSet.Fields.Item("LineTotal").Value);// vLineTotal.ToString("N2"));
-                                            this.dtDados.SetValue("Quantity", i, oRSet.Fields.Item("Quantity").Value);
-                                            this.dtDados.SetValue("OpenQty", i, oRSet.Fields.Item("OpenQty").Value);
-                                            this.dtDados.SetValue("unitMsr", i, oRSet.Fields.Item("unitMsr").Value);
-                                            //Double vPeso = (oRSet.Fields.Item("Peso").Value);
-                                            this.dtDados.SetValue("Peso", i,oRSet.Fields.Item("Peso").Value);// vPeso.ToString("N3"));
-                                            this.dtDados.SetValue("NumPerMsr", i, oRSet.Fields.Item("NumPerMsr").Value);
-                                            this.dtDados.SetValue("LineNum", i, oRSet.Fields.Item("LineNum").Value);
-                                            //Double vTaxRate = (oRSet.Fields.Item("TaxRate").Value);
-                                            this.dtDados.SetValue("TaxRate", i, oRSet.Fields.Item("TaxRate").Value);// vTaxRate.ToString("N2"));
-                       
+                this.gridDados.DataTable = this.dtDados;
+                this.gridDados.Columns.Item("ColCheck").Type = SAPbouiCOM.BoGridColumnType.gct_CheckBox;
+                this.gridDados.Columns.Item("DocEntry").Editable = false;
+                this.gridDados.Columns.Item("DocNum").Editable = false;
+                this.gridDados.Columns.Item("VisOrder").Editable = false;
+                this.gridDados.Columns.Item("NcmCode").Editable = false;
+                this.gridDados.Columns.Item("ItemCode").Editable = false;
+                this.gridDados.Columns.Item("Dscription").Editable = false;
+                this.gridDados.Columns.Item("Price").Editable = false;
+                this.gridDados.Columns.Item("LineTotal").Editable = false;
+                this.gridDados.Columns.Item("OpenQty").Editable = false;
+                this.gridDados.Columns.Item("unitMsr").Editable = false;
+                this.gridDados.Columns.Item("Peso").Editable = false;
+                this.gridDados.Columns.Item("Frete").Editable = false;
+                this.gridDados.Columns.Item("OtrDesp").Editable = false;
+                this.gridDados.Columns.Item("NumPerMsr").Editable = false;
+                this.gridDados.Columns.Item("LineNum").Visible = false;
+                this.gridDados.Columns.Item("TaxRate").Editable = false;
 
-                                            oRSet.MoveNext();
-                                        }
-                    */
-                    this.gridDados.DataTable = this.dtDados;
-                    this.gridDados.Columns.Item("ColCheck").Type = SAPbouiCOM.BoGridColumnType.gct_CheckBox;
-                    this.gridDados.Columns.Item("DocEntry").Editable = false;
-                    this.gridDados.Columns.Item("DocNum").Editable = false;
-                    this.gridDados.Columns.Item("VisOrder").Editable = false;
-                    this.gridDados.Columns.Item("NcmCode").Editable = false;
-                    this.gridDados.Columns.Item("ItemCode").Editable = false;
-                    this.gridDados.Columns.Item("Dscription").Editable = false;
-                    this.gridDados.Columns.Item("Price").Editable = false;
-                    this.gridDados.Columns.Item("LineTotal").Editable = false;
-                    this.gridDados.Columns.Item("OpenQty").Editable = false;
-                    this.gridDados.Columns.Item("unitMsr").Editable = false;
-                    this.gridDados.Columns.Item("Peso").Editable = false;
-                    this.gridDados.Columns.Item("Frete").Editable = false;
-                    this.gridDados.Columns.Item("OtrDesp").Editable = false;
-                    this.gridDados.Columns.Item("NumPerMsr").Editable = false;
-                    this.gridDados.Columns.Item("LineNum").Visible = false;
-                    this.gridDados.Columns.Item("TaxRate").Editable = false;
+                SAPbouiCOM.EditTextColumn colCodInterno = (SAPbouiCOM.EditTextColumn)this.gridDados.Columns.Item("DocEntry");
+                colCodInterno.LinkedObjectType = "22";
 
-                    SAPbouiCOM.EditTextColumn colCodInterno = (SAPbouiCOM.EditTextColumn)this.gridDados.Columns.Item("DocEntry");
-                    colCodInterno.LinkedObjectType = "22";
+                SAPbouiCOM.EditTextColumn colCodItem = (SAPbouiCOM.EditTextColumn)this.gridDados.Columns.Item("ItemCode");
+                colCodItem.LinkedObjectType = "4";
 
-                    SAPbouiCOM.EditTextColumn colCodItem = (SAPbouiCOM.EditTextColumn)this.gridDados.Columns.Item("ItemCode");
-                    colCodItem.LinkedObjectType = "4";
-                }
             }
             finally
             {
@@ -432,33 +229,33 @@ namespace ImportacaoNF
             try
             {
                 //SAPbobsCOM.Company oCompany = (SAPbobsCOM.Company)Application.SBO_Application.Company.GetDICompany();
-                SAPbobsCOM.Recordset oRSet = (SAPbobsCOM.Recordset)Program._Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+                SAPbobsCOM.Recordset oRSet = (SAPbobsCOM.Recordset)ConexaoSAP.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
 
                 SAPbouiCOM.Framework.Application.SBO_Application.Forms.ActiveForm.Freeze(true);
 
-                String vCodPN = EditText9.Value;
-                String vCodPedido = EditText2.Value;
-                String vCodProcesso = EditText0.Value;
+                String vCodPN = txtCodePN.Value;
+                String vCodPedido = txtCodigoPedido.Value;
+                String vCodProcesso = txtProcesso.Value;
 
-                if (vCodPN != "")
+                if (!String.IsNullOrWhiteSpace(vCodPN))
                 {
                     SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("Realizar consulta pelo Código do PN através do botão pesquisa");
                     return;
                 }
 
-                if (vCodPedido != "")
+                if (!String.IsNullOrWhiteSpace(vCodPedido))
                 {
                     SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("Realizar consulta pelo Pedido através do botão pesquisa");
                     return;
                 }
 
-                if (vCodProcesso != "")
+                if (!String.IsNullOrWhiteSpace(vCodProcesso))
                 {
                     SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("Realizar consulta pelo Nº do proceso através do botão pesquisa");
                     return;
                 }
 
-                String vCodImp = EditText12.Value;
+                String vCodImp = txtCodigoImportacao.Value;
 
                 if (vCodImp == "")
                 {
@@ -467,129 +264,78 @@ namespace ImportacaoNF
                 }
 
 
-                string Query = "SELECT " +
-                                    " T1.U_PEDLINITEM as LineNum, " +
-                                    " T1.U_Pedido as DocEntry, " +
-                                    " T1.U_PEDDOCNUM as DocNum, " +
-                                    " T1.U_CODPRODUTO as ItemCode, " +
-                                    " T1.U_DSCPRODUTO as Dscription, " +
-                                    " T1.U_PRECO as Price, " +
-                                    " T1.U_PRECOTOTAL as LineTotal, " +
-                                    " T1.U_CODPRODUTO as ItemCode, " +
-                                    " T1.U_DSCPRODUTO as Dscription, " +
-                                    " T1.U_PRECO as Price, " +
-                                    " T1.U_QTDPED as Quantity, " +
-                                    " T1.U_QTDABERTA as OpenQty, " +
-                                    " T1.U_UM AS unitMsr, " +
-                                    " T1.U_PESO as Peso, " +
-                                    " T1.U_ITMNUM AS NumPerMsr, " +
-                                    " T0.U_TXID AS TXDI, " +
-                                    " T0.U_FRTINT AS FRTINT, " +
-                                    " T0.U_OTRDESP AS OTRDESP, " +
-                                    " T0.U_TTPESO AS TTPESO, " +
-                                    " T0.U_TTME AS TTME, " +
-                                    " T0.U_TOTAL AS TOTAL, " +
-                                    " T1.U_FRETE as FreteLinha, " +
-                                    " T1.U_OTRDESP as OtrDespLinha, " +
-                                    " T3.NcmCode as NcmCode, " +
-                                    " T1.U_PEDLINORDER as VisOrder, " +
-                                    " T1.U_TAXORDER as TaxRate, " +
-                                    " T0.U_TAXVALLINE as TaxValLine " +
-                                " FROM " +
-                                    " [@ALFT_IMPORT] as T0 " +
-                                    " INNER JOIN [@ALFT_IMPORT1] AS T1 ON T1.U_DocEntry = T0.U_DocEntry " +
-                                    " INNER JOIN OITM AS T2 ON T2.ItemCode = T1.U_CODPRODUTO " +
-                                    " LEFT JOIN ONCM AS T3 ON T3.AbsEntry = T2.NcmCode " +
-                                " WHERE " +
-                                    " T0.U_DocEntry = " + vCodImp;
+                string Query = QueryCarregar(vCodImp);
 
                 oRSet.DoQuery(Query);
 
-                if (oRSet.RecordCount > 0)
+                this.dtDados.Rows.Clear();
+
+                if (oRSet.RecordCount == 0)
                 {
-                    this.dtDados.Rows.Clear();
-
-                    while (!oRSet.EoF)
-                    {
-                        this.dtDados.Rows.Add();
-                        int i = this.dtDados.Rows.Count - 1;
-
-                        this.dtDados.SetValue("DocEntry", i, oRSet.Fields.Item("DocEntry").Value.ToString());
-                        this.dtDados.SetValue("DocNum", i, oRSet.Fields.Item("DocNum").Value.ToString());
-                        this.dtDados.SetValue("VisOrder", i, Int32.Parse(oRSet.Fields.Item("VisOrder").Value.ToString()) + 1);
-                        this.dtDados.SetValue("NcmCode", i, oRSet.Fields.Item("NcmCode").Value.ToString());
-                        this.dtDados.SetValue("ItemCode", i, oRSet.Fields.Item("ItemCode").Value.ToString());
-                        this.dtDados.SetValue("Dscription", i, RetornaDescItem(oRSet.Fields.Item("ItemCode").Value.ToString()));
-                        Double vPrice = Double.Parse(oRSet.Fields.Item("Price").Value.ToString());
-                        this.dtDados.SetValue("Price", i, vPrice.ToString("N4"));
-                        Double vLineTotal = Double.Parse(oRSet.Fields.Item("LineTotal").Value.ToString());
-                        this.dtDados.SetValue("LineTotal", i, vLineTotal.ToString("N2"));
-                        this.dtDados.SetValue("Quantity", i, oRSet.Fields.Item("Quantity").Value.ToString());
-                        this.dtDados.SetValue("OpenQty", i, oRSet.Fields.Item("OpenQty").Value.ToString());
-                        this.dtDados.SetValue("unitMsr", i, oRSet.Fields.Item("unitMsr").Value.ToString());
-                        Double vPeso = Double.Parse(oRSet.Fields.Item("Peso").Value.ToString());
-                        this.dtDados.SetValue("Peso", i, vPeso.ToString("N3"));
-                        this.dtDados.SetValue("NumPerMsr", i, oRSet.Fields.Item("NumPerMsr").Value.ToString());
-                        this.dtDados.SetValue("LineNum", i, oRSet.Fields.Item("LineNum").Value.ToString());
-                        this.dtDados.SetValue("TaxRate", i, oRSet.Fields.Item("TaxRate").Value.ToString());
-
-                        this.gridDados.DataTable.SetValue(0, i, "Y");
-                        Double vFreteLinha = Double.Parse(oRSet.Fields.Item("FreteLinha").Value.ToString());
-                        this.gridDados.DataTable.SetValue(13, i, vFreteLinha.ToString("N4"));
-
-                        Double vOtrDespLinha = Double.Parse(oRSet.Fields.Item("OtrDespLinha").Value.ToString());
-                        this.gridDados.DataTable.SetValue(14, i, vOtrDespLinha.ToString("N4"));
-
-                        String TXDI = oRSet.Fields.Item("TXDI").Value.ToString().Replace(",", ".");
-                        EditText4.Value = TXDI;
-
-                        String FRTINT = oRSet.Fields.Item("FRTINT").Value.ToString().Replace(",", ".");
-                        EditText6.Value = FRTINT;
-
-                        String OTRDESP = oRSet.Fields.Item("OTRDESP").Value.ToString().Replace(",", ".");
-                        EditText3.Value = OTRDESP;
-
-                        Double TTPESO = Double.Parse(oRSet.Fields.Item("TTPESO").Value.ToString());
-                        EditText1.Value = TTPESO.ToString("N3");
-
-                        Double TTME = Double.Parse(oRSet.Fields.Item("TTME").Value.ToString());
-                        EditText5.Value = TTME.ToString("N2");
-
-                        Double TOTALII = Double.Parse(oRSet.Fields.Item("TaxValLine").Value.ToString());
-                        EditText11.Value = TOTALII.ToString("N2");
-
-                        Double TOTAL = Double.Parse(oRSet.Fields.Item("TOTAL").Value.ToString());
-                        EditText8.Value = TOTAL.ToString("N2");
-
-                        oRSet.MoveNext();
-                    }
-
-                    this.gridDados.Columns.Item("ColCheck").Type = SAPbouiCOM.BoGridColumnType.gct_CheckBox;
-                    this.gridDados.Columns.Item("DocEntry").Editable = false;
-                    this.gridDados.Columns.Item("DocNum").Editable = false;
-                    this.gridDados.Columns.Item("LineNum").Editable = false;
-                    this.gridDados.Columns.Item("NcmCode").Editable = false;
-                    this.gridDados.Columns.Item("ItemCode").Editable = false;
-                    this.gridDados.Columns.Item("Dscription").Editable = false;
-                    this.gridDados.Columns.Item("Price").Editable = false;
-                    this.gridDados.Columns.Item("LineTotal").Editable = false;
-                    this.gridDados.Columns.Item("OpenQty").Editable = false;
-                    this.gridDados.Columns.Item("unitMsr").Editable = false;
-                    this.gridDados.Columns.Item("Peso").Editable = false;
-                    this.gridDados.Columns.Item("Frete").Editable = false;
-                    this.gridDados.Columns.Item("OtrDesp").Editable = false;
-                    this.gridDados.Columns.Item("NumPerMsr").Editable = false;
-                    this.gridDados.Columns.Item("LineNum").Visible = false;
-                    this.gridDados.Columns.Item("VisOrder").Editable = false;
-                    this.gridDados.Columns.Item("TaxRate").Editable = false;
-
-                    SAPbouiCOM.EditTextColumn colCodInterno = (SAPbouiCOM.EditTextColumn)this.gridDados.Columns.Item("DocEntry");
-                    colCodInterno.LinkedObjectType = "22";
-
-                    SAPbouiCOM.EditTextColumn colCodItem = (SAPbouiCOM.EditTextColumn)this.gridDados.Columns.Item("ItemCode");
-                    colCodItem.LinkedObjectType = "4";
-
+                    SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText("Nenhum registro encontrado!", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
+                    return;
                 }
+
+                while (!oRSet.EoF)
+                {
+                    this.dtDados.Rows.Add();
+                    int i = this.dtDados.Rows.Count - 1;
+
+                    this.dtDados.SetValue("DocEntry", i, oRSet.Fields.Item("DocEntry").Value.ToString());
+                    this.dtDados.SetValue("DocNum", i, oRSet.Fields.Item("DocNum").Value.ToString());
+                    this.dtDados.SetValue("VisOrder", i, Int32.Parse(oRSet.Fields.Item("VisOrder").Value.ToString()) + 1);
+                    this.dtDados.SetValue("NcmCode", i, oRSet.Fields.Item("NcmCode").Value.ToString());
+                    this.dtDados.SetValue("ItemCode", i, oRSet.Fields.Item("ItemCode").Value.ToString());
+                    this.dtDados.SetValue("Dscription", i, RetornaDescItem(oRSet.Fields.Item("ItemCode").Value.ToString()));
+                    this.dtDados.SetValue("Price", i, Convert.ToDouble(oRSet.Fields.Item("Price").Value).ToString("N4"));
+                    this.dtDados.SetValue("LineTotal", i, Convert.ToDouble(oRSet.Fields.Item("LineTotal").Value).ToString("N2"));
+                    this.dtDados.SetValue("Quantity", i, oRSet.Fields.Item("Quantity").Value.ToString());
+                    this.dtDados.SetValue("OpenQty", i, oRSet.Fields.Item("OpenQty").Value.ToString());
+                    this.dtDados.SetValue("unitMsr", i, oRSet.Fields.Item("unitMsr").Value.ToString());
+                    this.dtDados.SetValue("Peso", i, Convert.ToDouble(oRSet.Fields.Item("Peso").Value).ToString("N3"));
+                    this.dtDados.SetValue("NumPerMsr", i, oRSet.Fields.Item("NumPerMsr").Value.ToString());
+                    this.dtDados.SetValue("LineNum", i, oRSet.Fields.Item("LineNum").Value.ToString());
+                    this.dtDados.SetValue("TaxRate", i, oRSet.Fields.Item("TaxRate").Value.ToString());
+
+                    this.gridDados.DataTable.SetValue(0, i, "Y");
+                    this.gridDados.DataTable.SetValue(13, i, Convert.ToDouble(oRSet.Fields.Item("FreteLinha").Value).ToString("N4"));
+                    this.gridDados.DataTable.SetValue(14, i, Convert.ToDouble(oRSet.Fields.Item("OtrDespLinha").Value).ToString("N4"));
+
+                    txtTaxaDI.Value = ParseGlobalization(oRSet.Fields.Item("TXDI").Value);
+                    txtFreteInternacional.Value = ParseGlobalization(oRSet.Fields.Item("FRTINT").Value);
+                    txtOutraDespesa.Value = ParseGlobalization(oRSet.Fields.Item("OTRDESP").Value);
+                    txtPeso.Value = Convert.ToDouble(oRSet.Fields.Item("TTPESO").Value).ToString("N3");
+                    txtTotalFOB.Value = Convert.ToDouble(oRSet.Fields.Item("TTME").Value).ToString("N2");
+                    txtTotal_II.Value = Convert.ToDouble(oRSet.Fields.Item("TaxValLine").Value).ToString("N2");
+                    txtTotalRS.Value = Convert.ToDouble(oRSet.Fields.Item("TOTAL").Value).ToString("N2");
+
+                    oRSet.MoveNext();
+                }
+
+                this.gridDados.Columns.Item("ColCheck").Type = SAPbouiCOM.BoGridColumnType.gct_CheckBox;
+                this.gridDados.Columns.Item("DocEntry").Editable = false;
+                this.gridDados.Columns.Item("DocNum").Editable = false;
+                this.gridDados.Columns.Item("LineNum").Editable = false;
+                this.gridDados.Columns.Item("NcmCode").Editable = false;
+                this.gridDados.Columns.Item("ItemCode").Editable = false;
+                this.gridDados.Columns.Item("Dscription").Editable = false;
+                this.gridDados.Columns.Item("Price").Editable = false;
+                this.gridDados.Columns.Item("LineTotal").Editable = false;
+                this.gridDados.Columns.Item("OpenQty").Editable = false;
+                this.gridDados.Columns.Item("unitMsr").Editable = false;
+                this.gridDados.Columns.Item("Peso").Editable = false;
+                this.gridDados.Columns.Item("Frete").Editable = false;
+                this.gridDados.Columns.Item("OtrDesp").Editable = false;
+                this.gridDados.Columns.Item("NumPerMsr").Editable = false;
+                this.gridDados.Columns.Item("LineNum").Visible = false;
+                this.gridDados.Columns.Item("VisOrder").Editable = false;
+                this.gridDados.Columns.Item("TaxRate").Editable = false;
+
+                SAPbouiCOM.EditTextColumn colCodInterno = (SAPbouiCOM.EditTextColumn)this.gridDados.Columns.Item("DocEntry");
+                colCodInterno.LinkedObjectType = "22";
+
+                SAPbouiCOM.EditTextColumn colCodItem = (SAPbouiCOM.EditTextColumn)this.gridDados.Columns.Item("ItemCode");
+                colCodItem.LinkedObjectType = "4";
 
             }
             finally
@@ -605,9 +351,9 @@ namespace ImportacaoNF
             SAPbouiCOM.Framework.Application.SBO_Application.StatusBar.SetText("Salvar em andamento.", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
 
             double vTxtTxID;
-            if (EditText4.Value != "")
+            if (!String.IsNullOrWhiteSpace(txtTaxaDI.Value))
             {
-                vTxtTxID = Double.Parse(EditText4.Value.Replace(".", ","));
+                vTxtTxID = Convert.ToDouble(txtTaxaDI.Value.Replace(".", ","));
 
             }
             else
@@ -618,9 +364,9 @@ namespace ImportacaoNF
             }
 
             double vFrtInt;
-            if (EditText6.Value != "")
+            if (!String.IsNullOrWhiteSpace(txtFreteInternacional.Value))
             {
-                vFrtInt = Double.Parse(EditText6.Value.Replace(".", ","));
+                vFrtInt = Convert.ToDouble(txtFreteInternacional.Value.Replace(".", ","));
 
             }
             else
@@ -631,9 +377,9 @@ namespace ImportacaoNF
             }
 
             double vOtrDesp;
-            if (EditText3.Value != "")
+            if (!String.IsNullOrWhiteSpace(txtOutraDespesa.Value))
             {
-                vOtrDesp = Double.Parse(EditText3.Value.ToString().Replace(".", ","));
+                vOtrDesp = Convert.ToDouble(txtOutraDespesa.Value.ToString().Replace(".", ","));
             }
             else
             {
@@ -641,38 +387,38 @@ namespace ImportacaoNF
             }
 
             double vContainer;
-            if (EditText7.Value != "")
+            if (!String.IsNullOrWhiteSpace(txtContainer.Value))
             {
-                vContainer = Double.Parse(EditText7.Value.ToString().Replace(".", ","));
+                vContainer = Convert.ToDouble(txtContainer.Value.ToString().Replace(".", ","));
             }
             else
             {
                 vContainer = 0;
             }
 
-            Double vTotalPeso = Double.Parse(EditText1.Value.PadLeft(3, '0'));
-            Double vTotalME = Double.Parse(EditText5.Value.PadLeft(2, '0'));
-            Double vTotal = Double.Parse(EditText8.Value.PadLeft(2, '0'));
-            Double vTotalII = Double.Parse(EditText11.Value.PadLeft(2, '0'));
+            Double vTotalPeso = Convert.ToDouble(txtPeso.Value.PadLeft(3, '0'));
+            Double vTotalME = Convert.ToDouble(txtTotalFOB.Value.PadLeft(2, '0'));
+            Double vTotal = Convert.ToDouble(txtTotalRS.Value.PadLeft(2, '0'));
+            Double vTotalII = Convert.ToDouble(txtTotal_II.Value.PadLeft(2, '0'));
 
             //SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("2");
             //string Hoje = "2021/03/24";
             string Hoje = DateTime.Now.ToShortDateString();
 
-            string vCodImp = EditText12.Value;
+            string vCodImp = txtCodigoImportacao.Value;
             string vRetornoNrImp;
-            if (vCodImp != "")
+            if (!String.IsNullOrWhiteSpace(vCodImp))
             {
                 vRetornoNrImp = RetornaExisteImportacao(Int32.Parse(vCodImp));
             }
             else
             {
-                vCodImp = EditText13.Value.ToString();
-                //int CodExiste = Int32.Parse(EditText13.ToString()) - 1;
+                vCodImp = txtCodigoImportacao.Value.ToString();
+                //int CodExiste = Int32.Parse(txtCodImp.ToString()) - 1;
                 vRetornoNrImp = RetornaExisteImportacao(Int32.Parse(vCodImp));
             }
 
-            if ((vRetornoNrImp != ""))
+            if (!String.IsNullOrWhiteSpace(vRetornoNrImp))
             {
 
                 //SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("Esse documento já foi salvo.");
@@ -701,21 +447,21 @@ namespace ImportacaoNF
                         string vProduto = this.gridDados.DataTable.GetValue("ItemCode", y).ToString();
                         //string vDescricao = this.gridDados.DataTable.GetValue(6, y).ToString().Replace("'", " ").Replace("&", " ");
                         string vDescricao = "";
-                        double vPrecoUnit = double.Parse(this.gridDados.DataTable.GetValue("Price", y).ToString());
-                        double vPrecoTotal = double.Parse(this.gridDados.DataTable.GetValue("LineTotal", y).ToString());
-                        double vQuantidade = double.Parse(this.gridDados.DataTable.GetValue("Quantity", y).ToString());
-                        double vQuantidadeAberta = double.Parse(this.gridDados.DataTable.GetValue("OpenQty", y).ToString());
+                        double vPrecoUnit = Convert.ToDouble(this.gridDados.DataTable.GetValue("Price", y).ToString());
+                        double vPrecoTotal = Convert.ToDouble(this.gridDados.DataTable.GetValue("LineTotal", y).ToString());
+                        double vQuantidade = Convert.ToDouble(this.gridDados.DataTable.GetValue("Quantity", y).ToString());
+                        double vQuantidadeAberta = Convert.ToDouble(this.gridDados.DataTable.GetValue("OpenQty", y).ToString());
                         string vUm = this.gridDados.DataTable.GetValue("unitMsr", y).ToString();
-                        double vPeso = double.Parse(this.gridDados.DataTable.GetValue("Peso", y).ToString());
-                        double vFrete = double.Parse(this.gridDados.DataTable.GetValue("Frete", y).ToString());
-                        double vOutrasDespesas = double.Parse(this.gridDados.DataTable.GetValue("OtrDesp", y).ToString());
+                        double vPeso = Convert.ToDouble(this.gridDados.DataTable.GetValue("Peso", y).ToString());
+                        double vFrete = Convert.ToDouble(this.gridDados.DataTable.GetValue("Frete", y).ToString());
+                        double vOutrasDespesas = Convert.ToDouble(this.gridDados.DataTable.GetValue("OtrDesp", y).ToString());
                         int vItens = Int32.Parse(this.gridDados.DataTable.GetValue("NumPerMsr", y).ToString());
                         int vLinPed = Int32.Parse(this.gridDados.DataTable.GetValue("LineNum", y).ToString());
-                        double vTaxRate = double.Parse(this.gridDados.DataTable.GetValue("TaxRate", y).ToString());
+                        double vTaxRate = Convert.ToDouble(this.gridDados.DataTable.GetValue("TaxRate", y).ToString());
 
                         string vDeposito = "01";
 
-                        if ((vRetornoNrImp != ""))
+                        if (!String.IsNullOrWhiteSpace(vRetornoNrImp))
                         {
                             // Inserir Linha de Importacao
                             InserirLinhaImportacao(Int32.Parse(vRetornoNrImp), vPedido, vProduto, vDescricao, vPrecoUnit, vPrecoTotal, vQuantidade, vQuantidadeAberta, vQuantidade, vUm, vPeso, vFrete, vOutrasDespesas, vItens, vDeposito, vPedNumDoc, vLinPed, vVisOrder, vTaxRate);
@@ -763,9 +509,9 @@ namespace ImportacaoNF
                 SAPbouiCOM.Framework.Application.SBO_Application.Forms.ActiveForm.Freeze(true);
 
                 double vTxtTxID;
-                if (EditText4.Value != "")
+                if (!String.IsNullOrWhiteSpace(txtTaxaDI.Value))
                 {
-                    vTxtTxID = Double.Parse(EditText4.Value.ToString().Replace(".", ","));
+                    vTxtTxID = Convert.ToDouble(txtTaxaDI.Value.ToString().Replace(".", ","));
                 }
                 else
                 {
@@ -775,9 +521,9 @@ namespace ImportacaoNF
                 }
 
                 double vFrtInt;
-                if (EditText6.Value != "")
+                if (!String.IsNullOrWhiteSpace(txtFreteInternacional.Value))
                 {
-                    vFrtInt = Double.Parse(EditText6.Value.ToString().Replace(".", ","));
+                    vFrtInt = Convert.ToDouble(txtFreteInternacional.Value.ToString().Replace(".", ","));
                 }
                 else
                 {
@@ -787,9 +533,9 @@ namespace ImportacaoNF
                 }
 
                 double vOtrDesp;
-                if (EditText3.Value != "")
+                if (!String.IsNullOrWhiteSpace(txtOutraDespesa.Value))
                 {
-                    vOtrDesp = Double.Parse(EditText3.Value.ToString().Replace(".", ","));
+                    vOtrDesp = Convert.ToDouble(txtOutraDespesa.Value.ToString().Replace(".", ","));
                 }
                 else
                 {
@@ -808,13 +554,13 @@ namespace ImportacaoNF
 
                     if (this.gridDados.DataTable.GetValue(0, y).ToString() == "Y")
                     {
-                        Double vTotalFrete = ((vFrtInt / TotalPeso) * Double.Parse(this.gridDados.DataTable.GetValue("Peso", y).ToString()));
+                        Double vTotalFrete = ((vFrtInt / TotalPeso) * Convert.ToDouble(this.gridDados.DataTable.GetValue("Peso", y).ToString()));
                         this.gridDados.DataTable.SetValue("Frete", y, vTotalFrete.ToString("N4"));
                         Double vCalOtrDesp = (vOtrDesp / contador);
                         this.gridDados.DataTable.SetValue("OtrDesp", y, (vCalOtrDesp.ToString("N4")));
 
-                        EditText1.Value = TotalPeso.ToString("N3");
-                        EditText5.Value = TotalME.ToString("N2");
+                        txtPeso.Value = TotalPeso.ToString("N3");
+                        txtTotalFOB.Value = TotalME.ToString("N2");
 
                     }
                 }
@@ -825,7 +571,7 @@ namespace ImportacaoNF
 
                     if (this.gridDados.DataTable.GetValue(0, z).ToString() == "Y")
                     {
-                        TotalPeso = TotalPeso + Double.Parse(this.gridDados.DataTable.GetValue("Peso", z).ToString());
+                        TotalPeso = TotalPeso + Convert.ToDouble(this.gridDados.DataTable.GetValue("Peso", z).ToString());
                         if (TotalPeso == 0)
                         {
                             TotalPeso = 1;
@@ -838,19 +584,19 @@ namespace ImportacaoNF
 
                     if (this.gridDados.DataTable.GetValue(0, x).ToString() == "Y")
                     {
-                        Double vPesoLinha = Double.Parse(this.gridDados.DataTable.GetValue("Peso", x).ToString());
+                        Double vPesoLinha = Convert.ToDouble(this.gridDados.DataTable.GetValue("Peso", x).ToString());
                         Double vTotalFrete = ((vFrtInt / TotalPeso) * vPesoLinha);
                         this.gridDados.DataTable.SetValue("Frete", x, vTotalFrete.ToString("N4"));
 
-                        TotalME = TotalME + Double.Parse(this.gridDados.DataTable.GetValue("LineTotal", x).ToString());
+                        TotalME = TotalME + Convert.ToDouble(this.gridDados.DataTable.GetValue("LineTotal", x).ToString());
                         contador = contador + 1;
                         Double vCalOtrDesp = (vOtrDesp / contador);
                         this.gridDados.DataTable.SetValue("OtrDesp", x, (vCalOtrDesp.ToString("N4")));
 
-                        Double vQuantidade = Double.Parse(this.gridDados.DataTable.GetValue("Quantity", x).ToString());
-                        Double vPreco = Double.Parse(this.gridDados.DataTable.GetValue("Price", x).ToString());
-                        Double vFreteLinha = Double.Parse(this.gridDados.DataTable.GetValue("Frete", x).ToString());
-                        Double vTaxRate = Double.Parse(this.gridDados.DataTable.GetValue("TaxRate", x).ToString());
+                        Double vQuantidade = Convert.ToDouble(this.gridDados.DataTable.GetValue("Quantity", x).ToString());
+                        Double vPreco = Convert.ToDouble(this.gridDados.DataTable.GetValue("Price", x).ToString());
+                        Double vFreteLinha = Convert.ToDouble(this.gridDados.DataTable.GetValue("Frete", x).ToString());
+                        Double vTaxRate = Convert.ToDouble(this.gridDados.DataTable.GetValue("TaxRate", x).ToString());
 
                         TotalII = TotalII + (((vTxtTxID * (vPreco * vQuantidade)) + (vFreteLinha)) * (vTaxRate / 100));
 
@@ -858,12 +604,12 @@ namespace ImportacaoNF
 
                 }
 
-                EditText1.Value = TotalPeso.ToString("N3");
-                EditText11.Value = TotalII.ToString("N2");
-                EditText5.Value = TotalME.ToString("N2");
+                txtPeso.Value = TotalPeso.ToString("N3");
+                txtTotal_II.Value = TotalII.ToString("N2");
+                txtTotalFOB.Value = TotalME.ToString("N2");
 
                 Total = (((vTxtTxID * TotalME) + vFrtInt) + TotalII);
-                EditText8.Value = Total.ToString("N2");
+                txtTotalRS.Value = Total.ToString("N2");
 
             }
             finally
@@ -881,13 +627,13 @@ namespace ImportacaoNF
 
             //Processo para Salvar antes de inserir o documento
             string vRetornoNrImp;
-            string vCodImp = EditText12.Value;
-            //if (string.IsNullOrEmpty(vCodImp) || vCodImp != "")
-            if (vCodImp != "")
+            string vCodImp = txtCodigoImportacao.Value;
+            //if (string.IsNullOrWhiteSpace(vCodImp) || vCodImp !String.IsNullOrWhiteSpace())
+            if (!String.IsNullOrWhiteSpace(vCodImp))
             {
-                // vCodImp = EditText13.Value;
+                // vCodImp = txtCodImp.Value;
                 vRetornoNrImp = RetornaExisteImportacao(Int32.Parse(vCodImp));
-                if ((vRetornoNrImp != "") && (vCodImp != ""))
+                if (!String.IsNullOrWhiteSpace(vRetornoNrImp) && !String.IsNullOrWhiteSpace(vCodImp))
                 {
                     vRetornoNrImp = "";
                 }
@@ -899,15 +645,15 @@ namespace ImportacaoNF
             }
             else
             {
-                vCodImp = EditText13.Value;
+                vCodImp = txtCodigoImportacao.Value;
                 vRetornoNrImp = RetornaExisteImportacao(Int32.Parse(vCodImp));
             }
 
 
             double vTxtTxID;
-            if (EditText4.Value != "")
+            if (!String.IsNullOrWhiteSpace(txtTaxaDI.Value))
             {
-                vTxtTxID = Double.Parse(EditText4.Value.ToString().Replace(".", ","));
+                vTxtTxID = Convert.ToDouble(txtTaxaDI.Value.ToString().Replace(".", ","));
             }
             else
             {
@@ -916,14 +662,14 @@ namespace ImportacaoNF
                 return;
             }
 
-            if ((vRetornoNrImp != "") || (vRetornoNrImp == "0"))
-            //if (vRetornoNrImp != "")
+            if ((!String.IsNullOrWhiteSpace(vRetornoNrImp)) || (vRetornoNrImp == "0"))
+            //if (vRetornoNrImp !String.IsNullOrWhiteSpace())
             {
 
                 double vFrtInt;
-                if (EditText6.Value != "")
+                if (!String.IsNullOrWhiteSpace(txtFreteInternacional.Value))
                 {
-                    vFrtInt = Double.Parse(EditText6.Value.ToString().Replace(".", ","));
+                    vFrtInt = Convert.ToDouble(txtFreteInternacional.Value.ToString().Replace(".", ","));
 
                 }
                 else
@@ -934,9 +680,9 @@ namespace ImportacaoNF
                 }
 
                 double vOtrDesp;
-                if (EditText3.Value != "")
+                if (!String.IsNullOrWhiteSpace(txtOutraDespesa.Value))
                 {
-                    vOtrDesp = Double.Parse(EditText3.Value.ToString().Replace(".", ","));
+                    vOtrDesp = Convert.ToDouble(txtOutraDespesa.Value.ToString().Replace(".", ","));
                 }
                 else
                 {
@@ -944,27 +690,24 @@ namespace ImportacaoNF
                 }
 
                 double vContainer;
-                if (EditText7.Value != "")
+                if (!String.IsNullOrWhiteSpace(txtContainer.Value))
                 {
-                    vContainer = Double.Parse(EditText7.Value.ToString().Replace(".", ","));
+                    vContainer = Convert.ToDouble(txtContainer.Value.ToString().Replace(".", ","));
                 }
                 else
                 {
                     vContainer = 0;
                 }
 
-                Double vTotalPeso = Double.Parse(EditText1.Value.PadLeft(3, '0'));
-                Double vTotalME = Double.Parse(EditText5.Value.PadLeft(2, '0'));
-                Double vTotalII = Double.Parse(EditText11.Value.PadLeft(2, '0'));
-                Double vTotal = Double.Parse(EditText8.Value.PadLeft(2, '0'));
+                Double vTotalPeso = Convert.ToDouble(txtPeso.Value.PadLeft(3, '0'));
+                Double vTotalME = Convert.ToDouble(txtTotalFOB.Value.PadLeft(2, '0'));
+                Double vTotalII = Convert.ToDouble(txtTotal_II.Value.PadLeft(2, '0'));
+                Double vTotal = Convert.ToDouble(txtTotalRS.Value.PadLeft(2, '0'));
 
-                string Hoje = "2021/03/25";
-                //string Hoje = DateTime.Now.ToShortDateString();
-
-                if ((vRetornoNrImp != "") || (vRetornoNrImp == "0"))
+                if ((!String.IsNullOrWhiteSpace(vRetornoNrImp)) || (vRetornoNrImp == "0"))
                 {
                     // Inserir Cabeçalho de Importacao
-                    InserirCabecalhoImportacao(0, vTxtTxID, vFrtInt, vOtrDesp, vContainer, vTotalPeso, vTotalME, vTotal, "ABERTO", Hoje, vTotalII);
+                    InserirCabecalhoImportacao(0, vTxtTxID, vFrtInt, vOtrDesp, vContainer, vTotalPeso, vTotalME, vTotal, "ABERTO", DateTime.Now.ToShortDateString(), vTotalII);
 
                     for (int y = 0; y <= this.dtDados.Rows.Count - 1; y++)
                     {
@@ -977,20 +720,20 @@ namespace ImportacaoNF
                             string vProduto = this.gridDados.DataTable.GetValue("ItemCode", y).ToString();
                             //string vDescricao = this.gridDados.DataTable.GetValue(6, y).ToString();
                             string vDescricao = "";
-                            double vPrecoUnit = double.Parse(this.gridDados.DataTable.GetValue("Price", y).ToString());
-                            double vPrecoTotal = double.Parse(this.gridDados.DataTable.GetValue("LineTotal", y).ToString());
-                            double vQuantidade = double.Parse(this.gridDados.DataTable.GetValue("Quantity", y).ToString());
-                            double vQuantidadeAberta = double.Parse(this.gridDados.DataTable.GetValue("OpenQty", y).ToString());
+                            double vPrecoUnit = Convert.ToDouble(this.gridDados.DataTable.GetValue("Price", y).ToString());
+                            double vPrecoTotal = Convert.ToDouble(this.gridDados.DataTable.GetValue("LineTotal", y).ToString());
+                            double vQuantidade = Convert.ToDouble(this.gridDados.DataTable.GetValue("Quantity", y).ToString());
+                            double vQuantidadeAberta = Convert.ToDouble(this.gridDados.DataTable.GetValue("OpenQty", y).ToString());
                             string vUm = this.gridDados.DataTable.GetValue("unitMsr", y).ToString();
-                            double vPeso = double.Parse(this.gridDados.DataTable.GetValue("Peso", y).ToString());
-                            double vFrete = double.Parse(this.gridDados.DataTable.GetValue("Frete", y).ToString());
-                            double vOutrasDespesas = double.Parse(this.gridDados.DataTable.GetValue("OtrDesp", y).ToString());
+                            double vPeso = Convert.ToDouble(this.gridDados.DataTable.GetValue("Peso", y).ToString());
+                            double vFrete = Convert.ToDouble(this.gridDados.DataTable.GetValue("Frete", y).ToString());
+                            double vOutrasDespesas = Convert.ToDouble(this.gridDados.DataTable.GetValue("OtrDesp", y).ToString());
                             int vItens = Int32.Parse(this.gridDados.DataTable.GetValue("NumPerMsr", y).ToString());
                             int vLineNum = Int32.Parse(this.gridDados.DataTable.GetValue("LineNum", y).ToString());
-                            double vTaxRate = double.Parse(this.gridDados.DataTable.GetValue("TaxRate", y).ToString());
+                            double vTaxRate = Convert.ToDouble(this.gridDados.DataTable.GetValue("TaxRate", y).ToString());
                             string vDeposito = "01";
 
-                            if ((vRetornoNrImp != ""))
+                            if ((!String.IsNullOrWhiteSpace(vRetornoNrImp)))
                             {
                                 // Inserir Linha de Importacao
                                 InserirLinhaImportacao(Int32.Parse(vRetornoNrImp), vPedido, vProduto, vDescricao, vPrecoUnit, vPrecoTotal, vQuantidade, vQuantidadeAberta, vQuantidade, vUm, vPeso, vFrete, vOutrasDespesas, vItens, vDeposito, vPedNumDoc, vLinPed, vLineNum, vTaxRate);
@@ -1009,7 +752,7 @@ namespace ImportacaoNF
             }
 
             // Geração da Nota Fiscal
-            var vEsbocoNFRecebimento = (SAPbobsCOM.Documents)Program._Company.GetBusinessObject(BoObjectTypes.oDrafts);
+            var vEsbocoNFRecebimento = (SAPbobsCOM.Documents)ConexaoSAP.Company.GetBusinessObject(BoObjectTypes.oDrafts);
             vEsbocoNFRecebimento.DocObjectCode = SAPbobsCOM.BoObjectTypes.oPurchaseDeliveryNotes;
 
             for (int y = 0; y <= this.dtDados.Rows.Count - 1; y++)
@@ -1036,13 +779,13 @@ namespace ImportacaoNF
                         if (this.gridDados.DataTable.GetValue(0, i).ToString() == "Y")
                         {
                             vEsbocoNFRecebimento.Lines.ItemCode = this.gridDados.DataTable.GetValue("ItemCode", i).ToString();
-                            vEsbocoNFRecebimento.Lines.Quantity = Double.Parse(this.gridDados.DataTable.GetValue("Quantity", i).ToString());
+                            vEsbocoNFRecebimento.Lines.Quantity = Convert.ToDouble(this.gridDados.DataTable.GetValue("Quantity", i).ToString());
 
                             // Converter de Dolar para Real usando TX ID - Multiplicando. Somar o peso pelas linhas selecionada e depois dividir frete pelo total e multiplicar pelo peso da linha   
-                            Double vQuantidade = Double.Parse(this.gridDados.DataTable.GetValue("Quantity", i).ToString());
-                            Double vPreco = Double.Parse(this.gridDados.DataTable.GetValue("Price", i).ToString());
-                            Double vFreteLinha = Double.Parse(this.gridDados.DataTable.GetValue("Frete", i).ToString());
-                            Double vTaxRate = Double.Parse(this.gridDados.DataTable.GetValue("TaxRate", i).ToString());
+                            Double vQuantidade = Convert.ToDouble(this.gridDados.DataTable.GetValue("Quantity", i).ToString());
+                            Double vPreco = Convert.ToDouble(this.gridDados.DataTable.GetValue("Price", i).ToString());
+                            Double vFreteLinha = Convert.ToDouble(this.gridDados.DataTable.GetValue("Frete", i).ToString());
+                            Double vTaxRate = Convert.ToDouble(this.gridDados.DataTable.GetValue("TaxRate", i).ToString());
 
                             vEsbocoNFRecebimento.Lines.UnitPrice = (((vTxtTxID * vPreco) + (vFreteLinha / vQuantidade)) + (((vTxtTxID * vPreco) + (vFreteLinha / vQuantidade)) * (vTaxRate / 100)));
 
@@ -1068,9 +811,8 @@ namespace ImportacaoNF
 
                     if (vRetorno != 0)
                     {
-                        string MessagemErro = Program._Company.GetLastErrorDescription();
+                        string MessagemErro = ConexaoSAP.Company.GetLastErrorDescription();
                         throw new Exception(MessagemErro);
-                        return;
                     }
                     else
                     {
@@ -1096,7 +838,7 @@ namespace ImportacaoNF
 
             try
             {
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
+                recordset = (Recordset)ConexaoSAP.Company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery(query);
 
                 if (!recordset.EoF)
@@ -1123,7 +865,7 @@ namespace ImportacaoNF
 
             try
             {
-                recordset = (Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset);
+                recordset = (Recordset)ConexaoSAP.Company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery(query);
             }
             catch (Exception ex)
@@ -1138,6 +880,84 @@ namespace ImportacaoNF
                 recordset = null;
             }
         }
+
+        private string QueryPesquisar(string pnCode, string pedidoCodigo, string processoCodigo)
+        {
+            string query = "SELECT " +
+                           "POR1.LineNum, " +
+                           "OPOR.DocEntry, " +
+                           "OPOR.DocNum, " +
+                           "POR1.ItemCode, " +
+                           "POR1.Dscription, " +
+                           "POR1.Price, " +
+                           "POR1.TotalFrgn as LineTotal, " +
+                           "POR1.Quantity, " +
+                           "POR1.OpenQty, " +
+                           "POR1.unitMsr, " +
+                           "POR1.Weight1 as Peso, " +
+                           "POR1.NumPerMsr, " +
+                           "ONCM.NcmCode, " +
+                           "Por1.VisOrder, " +
+                           "ISNULL(POR4.TaxRate,1) AS TaxRate" +
+                       " FROM OPOR " +
+                           " INNER JOIN POR1 ON POR1.DocEntry = OPOR.DocEntry " +
+                           " INNER JOIN OITM ON OITM.ItemCode = POR1.ItemCode " +
+                           " LEFT JOIN POR4 ON POR1.DocEntry = POR4.DocEntry and POR1.LineNum = POR4.LineNum and POR4.staType = 23 " +
+                           " LEFT JOIN ONCM ON ONCM.AbsEntry = OITM.NcmCode " +
+                       " WHERE " +
+                           " OPOR.DocStatus <> 'C'" +
+                           " AND POR1.LineStatus <> 'C'" +
+                           " AND POR1.Currency <> 'R$' " +
+                            (String.IsNullOrWhiteSpace(pnCode) ? string.Empty : " AND (OPOR.CardCode = '" + pnCode + "' )") +
+                            (String.IsNullOrWhiteSpace(pedidoCodigo) ? string.Empty : " AND (OPOR.DocNum = " + pedidoCodigo + ") ") +
+                            (String.IsNullOrWhiteSpace(processoCodigo) ? string.Empty : " AND (OPOR.U_ALFT_NumPrc = " + processoCodigo + ") ") +
+                       " ORDER BY " +
+                           " OPOR.DocNum desc, " +
+                           " Por1.VisOrder asc ";
+
+            return query;
+        }
+
+        private string QueryCarregar(String codigoImportacao)
+        {
+            string query = "SELECT " +
+                                " T1.U_PEDLINITEM as LineNum, " +
+                                " T1.U_Pedido as DocEntry, " +
+                                " T1.U_PEDDOCNUM as DocNum, " +
+                                " T1.U_CODPRODUTO as ItemCode, " +
+                                " T1.U_DSCPRODUTO as Dscription, " +
+                                " T1.U_PRECO as Price, " +
+                                " T1.U_PRECOTOTAL as LineTotal, " +
+                                " T1.U_CODPRODUTO as ItemCode, " +
+                                " T1.U_DSCPRODUTO as Dscription, " +
+                                " T1.U_PRECO as Price, " +
+                                " T1.U_QTDPED as Quantity, " +
+                                " T1.U_QTDABERTA as OpenQty, " +
+                                " T1.U_UM AS unitMsr, " +
+                                " T1.U_PESO as Peso, " +
+                                " T1.U_ITMNUM AS NumPerMsr, " +
+                                " T0.U_TXID AS TXDI, " +
+                                " T0.U_FRTINT AS FRTINT, " +
+                                " T0.U_OTRDESP AS OTRDESP, " +
+                                " T0.U_TTPESO AS TTPESO, " +
+                                " T0.U_TTME AS TTME, " +
+                                " T0.U_TOTAL AS TOTAL, " +
+                                " T1.U_FRETE as FreteLinha, " +
+                                " T1.U_OTRDESP as OtrDespLinha, " +
+                                " T3.NcmCode as NcmCode, " +
+                                " T1.U_PEDLINORDER as VisOrder, " +
+                                " T1.U_TAXORDER as TaxRate, " +
+                                " T0.U_TAXVALLINE as TaxValLine " +
+                            " FROM " +
+                                " [@ALFT_IMPORT] as T0 " +
+                                " INNER JOIN [@ALFT_IMPORT1] AS T1 ON T1.U_DocEntry = T0.U_DocEntry " +
+                                " INNER JOIN OITM AS T2 ON T2.ItemCode = T1.U_CODPRODUTO " +
+                                " LEFT JOIN ONCM AS T3 ON T3.AbsEntry = T2.NcmCode " +
+                            " WHERE " +
+                                " T0.U_DocEntry = " + codigoImportacao;
+            return query;
+        }
+
 
         #endregion Repository
 
@@ -1215,15 +1035,10 @@ namespace ImportacaoNF
 
             var insertQuery = String.Format("INSERT INTO [@ALFT_IMPORT] " +
                               "VALUES('{0}', '{0}', '{1}', {2}, {3}, {4}, {5}, {6}, {7}, {8}, '{9}', '{10}', {11})",
-                                       code, vDocEntry, ParseAndTrim(pTxId), ParseAndTrim(pFrtInt), ParseAndTrim(pOtrDesp), ParseAndTrim(pContainer), ParseAndTrim(pTotalPeso), ParseAndTrim(pTotalMe),
-                                       ParseAndTrim(pTotal), pStatus, pData, ParseAndTrim(pTotalII));
+                                       code, vDocEntry, ParseGlobalization(pTxId), ParseGlobalization(pFrtInt), ParseGlobalization(pOtrDesp), ParseGlobalization(pContainer), ParseGlobalization(pTotalPeso), ParseGlobalization(pTotalMe),
+                                       ParseGlobalization(pTotal), pStatus, pData, ParseGlobalization(pTotalII));
 
             ExecuteQuery(insertQuery);
-        }
-
-        public static string ParseAndTrim(double value)
-        {
-            return value.ToString().Replace(",", ".");
         }
 
         public void InserirLinhaImportacao(int pDocEntry, int pPedido, string pProduto, string pDescricao, double pPreco, double pPrecoTotal, double pQtdPedida, double pQtdAberta, double pQtdFat, string pUm, double pPeso, double pFrete, double pOutraDesp, int pItmUm, string pDeposito, int pPedNumDoc, int pLinPed, int pVisOrder, double pTaxOrder)
@@ -1234,7 +1049,7 @@ namespace ImportacaoNF
             if (pDocEntry == 0)
             {
                 string Retorno = RetornaCodeLogLinha();
-                if (Retorno != "")
+                if (!String.IsNullOrWhiteSpace(Retorno))
                 {
                     codelinha = Int32.Parse(RetornaCodeLogLinha()) + 1;
                 }
@@ -1270,7 +1085,7 @@ namespace ImportacaoNF
 
             try
             {
-                oRs = ((Recordset)Program._Company.GetBusinessObject(BoObjectTypes.BoRecordset));
+                oRs = ((Recordset)ConexaoSAP.Company.GetBusinessObject(BoObjectTypes.BoRecordset));
                 string code = RetornaCodeLog();
 
                 var sql = "DELETE FROM [@ALFT_IMPORT] WHERE U_DocEntry = " + vDocEntry;
@@ -1295,6 +1110,20 @@ namespace ImportacaoNF
             var query = "DELETE FROM [@ALFT_IMPORT1] WHERE U_DocEntry = " + vDocEntry;
             //SAPbouiCOM.Framework.Application.SBO_Application.MessageBox("3 " + sql);
             ExecuteQuery(query);
+        }
+
+        #endregion
+
+        #region Utils
+
+        public string ParseGlobalization(double value)
+        {
+            return value.ToString().Trim().Replace(",", ".");
+        }
+
+        public string ParseGlobalization(object value)
+        {
+            return value.ToString().Trim().Replace(",", ".");
         }
 
         #endregion

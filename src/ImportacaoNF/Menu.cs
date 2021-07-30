@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SAPbouiCOM.Framework;
 
-namespace ImportacaoNF
+namespace SLT.ImportacaoNF
 {
     class Menu
     {
@@ -44,7 +44,7 @@ namespace ImportacaoNF
 
                 // Create s sub menu
                 oCreationPackage.Type = SAPbouiCOM.BoMenuType.mt_STRING;
-                oCreationPackage.UniqueID = "ImportacaoNF.frmImportacao";
+                oCreationPackage.UniqueID = "SLT.ImportacaoNF.frmImportacao";
                 oCreationPackage.String = "Controle de importação";
                 oMenus.AddEx(oCreationPackage);
             }
@@ -60,7 +60,7 @@ namespace ImportacaoNF
 
             try
             {
-                if (pVal.BeforeAction && pVal.MenuUID == "ImportacaoNF.frmImportacao")
+                if (pVal.BeforeAction && pVal.MenuUID == "SLT.ImportacaoNF.frmImportacao")
                 {
                     frmImportacao activeForm = new frmImportacao();
                     activeForm.Show();
