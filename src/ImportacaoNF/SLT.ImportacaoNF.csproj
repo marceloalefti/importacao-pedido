@@ -62,12 +62,21 @@
     <Reference Include="SAPBusinessOneSDK" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UserDefinedObjects\Models\UDO.cs" />
+    <Compile Include="UserDefinedObjects\Models\UserField.cs" />
+    <Compile Include="UserDefinedObjects\Models\UserTable.cs" />
+    <Compile Include="UserDefinedObjects\Models\UserFieldValue.cs" />
+    <Compile Include="UserDefinedObjects\Repository\UDORepository.cs" />
+    <Compile Include="UserDefinedObjects\Repository\UserFieldRepository.cs" />
+    <Compile Include="UserDefinedObjects\Repository\UserTableRepository.cs" />
+    <Compile Include="Utils\Mensagem.cs" />
+    <Compile Include="Utils\SetupAddon.cs" />
     <None Include="app.config" />
-    <None Include="frmImportacao.b1f">
+    <None Include="Forms\frmImportacao.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
     <Compile Include="Conexao\ConexaoSAP.cs" />
-    <Compile Include="frmImportacao.b1f.cs">
+    <Compile Include="Forms\frmImportacao.b1f.cs">
       <DependentUpon>frmImportacao.b1f</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />

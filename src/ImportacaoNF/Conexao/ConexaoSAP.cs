@@ -25,7 +25,7 @@ namespace SLT.ImportacaoNF.Conexao
             try
             {
                 SboGuiApi.Connect(sConnectionString);
-
+                
             }
             catch (Exception e)
             {
@@ -72,5 +72,45 @@ namespace SLT.ImportacaoNF.Conexao
                 oApplication.MessageBox(e.Message + e.StackTrace);
             }
         }
+
+        public static int ExecuteScalar(string Campo, string zTabela, string zWhere)
+        {
+            string Criterio;
+            int IntRet;
+            SAPbobsCOM.Recordset Rs;
+            Criterio = "SELECT " + Campo + " FROM " + zTabela + " WHERE " + zWhere;
+            Rs = (SAPbobsCOM.Recordset)Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+
+            try
+            {
+                Rs.DoQuery(Criterio);
+                IntRet = Rs.RecordCount;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(Rs);
+            }
+
+            return IntRet;
+        }
+
+        public static SAPbobsCOM.GeneralService ObterServico(string ServiceCode)
+        {
+            return Company.GetCompanyService().GetGeneralService(ServiceCode);
+        }
+
+        public static SAPbobsCOM.GeneralData ObterRegistroPorID(string ServiceCode, int DocEntry)
+        {
+            SAPbobsCOM.GeneralDataParams parametros = new SAPbobsCOM.GeneralDataParams();
+            parametros.SetProperty("DocEntry", DocEntry);
+
+            return ObterServico(ServiceCode).GetByParams(parametros);
+        }
+
+        
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SAPbouiCOM.Framework;
 using System.Net;
 using SLT.ImportacaoNF.Conexao;
+using SLT.ImportacaoNF.Utils;
 
 namespace SLT.ImportacaoNF
 {
@@ -35,6 +36,8 @@ namespace SLT.ImportacaoNF
 
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                new SetupAddon().InstalarEAtualizar();
 
                 oApp.Run();
             }
