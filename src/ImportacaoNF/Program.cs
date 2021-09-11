@@ -9,6 +9,9 @@ namespace SLT.ImportacaoNF
 {
     class Program
     {
+        static Application oApp = null;
+        static Menu MyMenu = null;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -17,7 +20,6 @@ namespace SLT.ImportacaoNF
         {
             try
             {
-                Application oApp = null;
                 if (args.Length < 1)
                 {
                     oApp = new Application();
@@ -27,7 +29,7 @@ namespace SLT.ImportacaoNF
                     oApp = new Application(args[0]);
                 }
 
-                Menu MyMenu = new Menu();
+                MyMenu = new Menu();
                 MyMenu.AddMenuItems();
                 oApp.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
@@ -52,7 +54,9 @@ namespace SLT.ImportacaoNF
             switch (EventType)
             {
                 case SAPbouiCOM.BoAppEventTypes.aet_ShutDown:
-                    //Exit Add-On
+                    MyMenu = new Menu();
+                    MyMenu.RemoveMenuItems();
+                    oApp.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
                     System.Windows.Forms.Application.Exit();
                     break;
                 case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:

@@ -12,11 +12,12 @@ using SLT.ImportacaoNF.UserDefinedObjects.Models;
 
 namespace SLT.ImportacaoNF
 {
-    [FormAttribute("SLT.ImportacaoNF.frmImportacao", "Forms/frmImportacao.b1f")]
+    [FormAttribute("OSLT_IMPORT", "Forms/frmImportacao.b1f")]
     class frmImportacao : UserFormBase
     {
         #region Attributes
 
+        /*
         private SAPbouiCOM.DataTable dtDados;
         private SAPbouiCOM.StaticText lblProcesso;
         private SAPbouiCOM.EditText txtProcesso;
@@ -64,7 +65,15 @@ namespace SLT.ImportacaoNF
         private EditText txtTotal_II;
 
         private Matrix matrixData;
-        private SAPbouiCOM.Application SAPApp;
+         */
+
+        private SAPbouiCOM.Application SAPApp = null;
+        private SAPbouiCOM.EditText oEditText = null;
+        private SAPbouiCOM.ComboBox oComboBox = null;
+        private SAPbouiCOM.Item oItem = null;
+        private SAPbouiCOM.Form oForm = null;
+        private SAPbouiCOM.Matrix oMatrix = null;
+
         private string filtroCodigoPN = string.Empty;
         private string filtroPedido = string.Empty;
         private string filtroProcesso = string.Empty;
@@ -74,30 +83,667 @@ namespace SLT.ImportacaoNF
 
         public frmImportacao()
         {
-            this.UIAPIRawForm.DataSources.DBDataSources.Item("@SLTIMPORT");
-            this.UIAPIRawForm.Mode = BoFormMode.fm_FIND_MODE;
-
-            CreateEmptyMatrix();
             SAPApp = SAPbouiCOM.Framework.Application.SBO_Application;
+            oForm = GetForm();
+            return;
+
+            //this.UIAPIRawForm.DataSources.DBDataSources.Item("@SLTIMPORT");
+            //this.UIAPIRawForm.Mode = BoFormMode.fm_FIND_MODE;
+            //CreateEmptyMatrix();
+        }
+
+
+
+        private SAPbouiCOM.Form GetForm()
+        {
+            try
+            {
+                SAPApp.Forms.Item("SLT_Importacao").Close();
+
+                return SAPApp.Forms.Item("SLT_Importacao");
+            }
+            catch (Exception ex)
+            {
+                return CriarFormulario();
+            }
+        }
+
+        public SAPbouiCOM.Form CriarFormulario()
+        {
+            SAPbouiCOM.FormCreationParams creationPackage = (SAPbouiCOM.FormCreationParams)SAPApp.CreateObject(SAPbouiCOM.BoCreatableObjectType.cot_FormCreationParams);
+            creationPackage.UniqueID = "SLT_Importacao";
+            creationPackage.FormType = "SLT_Importacao";
+            creationPackage.ObjectType = "OSLT_IMPORT";
+            creationPackage.BorderStyle = SAPbouiCOM.BoFormBorderStyle.fbs_Sizable;
+
+            oForm = SAPApp.Forms.AddEx(creationPackage);
+            oForm.Freeze(true);
+            oForm.Title = "Importação";
+            oForm.Width = 900;
+            oForm.Height = 700;
+            SAPApp.ItemEvent += SAPApp_ItemEvent;
+
+            CriarFormularioDefault();
+            CriarFormularioFiltros();
+            CriarFormularioMatrix();
+            CriarFormularioFooter();
+
+            oForm.Visible = true;
+            oForm.Freeze(false);
+
+            oForm.Mode = BoFormMode.fm_FIND_MODE;
+
+            return oForm;
+        }
+
+        public void SAPApp_ItemEvent(string FormUID, ref ItemEvent pVal, out bool BubbleEvent)
+        {
+            if (pVal.BeforeAction == false && FormUID == "SLT_Importacao")
+            {
+                HandleEvent(pVal.EventType, pVal);
+            }
+
+            BubbleEvent = true;
+        }
+
+        public void HandleEvent(BoEventTypes eventType, ItemEvent pVal)
+        {
+            switch (eventType)
+            {
+                case BoEventTypes.et_ALL_EVENTS:
+                    break;
+                case BoEventTypes.et_B1I_SERVICE_COMPLETE:
+                    break;
+                case BoEventTypes.et_CHOOSE_FROM_LIST:
+                    OnChooseFromList(pVal);
+                    break;
+                case BoEventTypes.et_CLICK:
+                    break;
+                case BoEventTypes.et_COMBO_SELECT:
+                    break;
+                case BoEventTypes.et_DATASOURCE_LOAD:
+                    break;
+                case BoEventTypes.et_DOUBLE_CLICK:
+                    break;
+                case BoEventTypes.et_Drag:
+                    break;
+                case BoEventTypes.et_EDIT_REPORT:
+                    break;
+                case BoEventTypes.et_FORMAT_SEARCH_COMPLETED:
+                    break;
+                case BoEventTypes.et_FORM_ACTIVATE:
+                    break;
+                case BoEventTypes.et_FORM_CLOSE:
+                    break;
+                case BoEventTypes.et_FORM_DATA_ADD:
+                    break;
+                case BoEventTypes.et_FORM_DATA_DELETE:
+                    break;
+                case BoEventTypes.et_FORM_DATA_LOAD:
+                    break;
+                case BoEventTypes.et_FORM_DATA_UPDATE:
+                    break;
+                case BoEventTypes.et_FORM_DEACTIVATE:
+                    break;
+                case BoEventTypes.et_FORM_DRAW:
+                    break;
+                case BoEventTypes.et_FORM_KEY_DOWN:
+                    break;
+                case BoEventTypes.et_FORM_LOAD:
+                    break;
+                case BoEventTypes.et_FORM_MENU_HILIGHT:
+                    break;
+                case BoEventTypes.et_FORM_RESIZE:
+                    oMatrix.LoadFromDataSource();
+                    oMatrix.AutoResizeColumns();
+                    break;
+                case BoEventTypes.et_FORM_UNLOAD:
+                    break;
+                case BoEventTypes.et_FORM_VISIBLE:
+                    break;
+                case BoEventTypes.et_GOT_FOCUS:
+                    break;
+                case BoEventTypes.et_GRID_SORT:
+                    break;
+                case BoEventTypes.et_ITEM_PRESSED:
+                    break;
+                case BoEventTypes.et_ITEM_WEBMESSAGE:
+                    break;
+                case BoEventTypes.et_KEY_DOWN:
+                    break;
+                case BoEventTypes.et_LOST_FOCUS:
+                    break;
+                case BoEventTypes.et_MATRIX_COLLAPSE_PRESSED:
+                    break;
+                case BoEventTypes.et_MATRIX_LINK_PRESSED:
+                    break;
+                case BoEventTypes.et_MATRIX_LOAD:
+                    break;
+                case BoEventTypes.et_MENU_CLICK:
+                    break;
+                case BoEventTypes.et_PICKER_CLICKED:
+                    break;
+                case BoEventTypes.et_PRINT:
+                    break;
+                case BoEventTypes.et_PRINT_DATA:
+                    break;
+                case BoEventTypes.et_PRINT_LAYOUT_KEY:
+                    break;
+                case BoEventTypes.et_RIGHT_CLICK:
+                    break;
+                case BoEventTypes.et_UDO_FORM_BUILD:
+                    break;
+                case BoEventTypes.et_UDO_FORM_OPEN:
+                    break;
+                case BoEventTypes.et_VALIDATE:
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        public SAPbouiCOM.Matrix CriarFormularioMatrix()
+        {
+            oForm.DataSources.DataTables.Add("oMatrixDT");
+
+            oItem = oForm.Items.Add("oMtrx1", SAPbouiCOM.BoFormItemTypes.it_MATRIX);
+
+            oItem = oForm.Items.Item("oMtrx1");
+            oItem.Top = 70;
+            oItem.Left = 15;
+            oItem.Width = oForm.Width - 30;
+            oItem.Height = 350;
+
+            oMatrix = (SAPbouiCOM.Matrix)oItem.Specific;
+
+            oForm.DataSources.DataTables.Item("oMatrixDT").Clear();
+
+            string sSQL = " SELECT              " +
+                          "         DocEntry    " +
+                          "    ,'Y' AS [Selected] " +
+                          "    ,[LineId]        " +
+                          "    ,[U_PedidoId] " +
+                          "    ,[U_ItemNum] " +
+                          "    ,[U_ItemCode] " +
+                          "    ,[U_QtdPed] " +
+                          "    ,[U_QtdDisp] " +
+                          "    ,[U_QtdFat] " +
+                          "    ,[U_Peso] " +
+                          "    ,[U_Frete] " +
+                          "    ,[U_OutroDes] " +
+                          "    ,[U_Deposito] " +
+                          "    ,[U_PedTax] " +
+                          " FROM [dbo].[@SLTIMPRT1] " +
+                          " WHERE DocEntry = -1 ";// + oEditText.Value;
+
+            oForm.DataSources.DataTables.Item("oMatrixDT").ExecuteQuery(sSQL);
+
+            oMatrix = (SAPbouiCOM.Matrix)oForm.Items.Item("oMtrx1").Specific;
+            SAPbouiCOM.Column oColumn = null;
+
+            oColumn = oMatrix.Columns.Add("oClmn0", SAPbouiCOM.BoFormItemTypes.it_CHECK_BOX);
+            //oColumn.DataBind.SetBound(true, string.Empty, "Selected");
+            oColumn.TitleObject.Caption = "#";
+
+
+            oColumn = oMatrix.Columns.Add("oClmn5", SAPbouiCOM.BoFormItemTypes.it_LINKED_BUTTON);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_PedidoId");
+            oColumn.TitleObject.Caption = "Nº do Pedido";
+            ((SAPbouiCOM.LinkedButton)oColumn.ExtendedObject).LinkedObject = BoLinkedObject.lf_PurchaseOrder;
+
+
+            oColumn = oMatrix.Columns.Add("oClmn1", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "LineId");
+            oColumn.TitleObject.Caption = "Nº Lin. Ped.";
+
+            oColumn = oMatrix.Columns.Add("oClmn6", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_ItemNum");
+            oColumn.TitleObject.Caption = "Nº do item";
+
+            oColumn = oMatrix.Columns.Add("oClmn7", SAPbouiCOM.BoFormItemTypes.it_LINKED_BUTTON);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_ItemCode");
+            oColumn.TitleObject.Caption = "Descrição do Item";
+            ((SAPbouiCOM.LinkedButton)oColumn.ExtendedObject).LinkedObject = BoLinkedObject.lf_Items;
+
+            oColumn = oMatrix.Columns.Add("oClmn8", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_QtdPed");
+            oColumn.TitleObject.Caption = "Qtd. Pedido";
+
+            oColumn = oMatrix.Columns.Add("oClmn9", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_QtdDisp");
+            oColumn.TitleObject.Caption = "Qtd Disponível";
+
+            oColumn = oMatrix.Columns.Add("oClmn10", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_QtdFat");
+            oColumn.TitleObject.Caption = "Qtd. Faturada";
+
+            oColumn = oMatrix.Columns.Add("oClmn11", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_Peso");
+            oColumn.TitleObject.Caption = "Peso";
+
+            oColumn = oMatrix.Columns.Add("oClmn12", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_Frete");
+            oColumn.TitleObject.Caption = "Frete";
+
+            oColumn = oMatrix.Columns.Add("oClmn13", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_OutroDes");
+            oColumn.TitleObject.Caption = "Outras Desp.";
+
+            oColumn = oMatrix.Columns.Add("oClmn14", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_Deposito");
+            oColumn.TitleObject.Caption = "Depósito";
+
+            oColumn = oMatrix.Columns.Add("oClmn15", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oColumn.DataBind.SetBound(true, "@SLTIMPRT1", "U_PedTax");
+            oColumn.TitleObject.Caption = "Taxa";
+
+            //oMatrix.Columns.Item("oClmn0").DataBind.UnBind();
+            SAPbouiCOM.DBDataSource oDBDataSource = oForm.DataSources.DBDataSources.Item(1); // SLTIMPRT1;
+            SAPbouiCOM.DataTable oDataTable = oForm.DataSources.DataTables.Item("oMatrixDT");
+            oDBDataSource.Clear();
+
+
+            for (int row = 0; row < oDataTable.Rows.Count; row++)
+            {
+                int offset = oDBDataSource.Size;
+                oDBDataSource.InsertRecord(row);
+
+                //oDBDataSource.SetValue("Selected", offset, oDataTable.GetValue("Selected", row).ToString());
+                oDBDataSource.SetValue("LineId", offset, oDataTable.GetValue("LineId", row).ToString());
+                //oDBDataSource.SetValue("U_PedidoId", offset, oDataTable.GetValue("U_PedidoId", row).ToString());
+                oDBDataSource.SetValue("U_ItemNum", offset, oDataTable.GetValue("U_ItemNum", row).ToString());
+                oDBDataSource.SetValue("U_ItemCode", offset, oDataTable.GetValue("U_ItemCode", row).ToString());
+                oDBDataSource.SetValue("U_QtdPed", offset, oDataTable.GetValue("U_QtdPed", row).ToString());
+                oDBDataSource.SetValue("U_QtdDisp", offset, oDataTable.GetValue("U_QtdDisp", row).ToString());
+                oDBDataSource.SetValue("U_QtdFat", offset, oDataTable.GetValue("U_QtdFat", row).ToString());
+                oDBDataSource.SetValue("U_Peso", offset, oDataTable.GetValue("U_Peso", row).ToString());
+                oDBDataSource.SetValue("U_Frete", offset, oDataTable.GetValue("U_Frete", row).ToString());
+                oDBDataSource.SetValue("U_OutroDes", offset, oDataTable.GetValue("U_OutroDes", row).ToString());
+                oDBDataSource.SetValue("U_Deposito", offset, oDataTable.GetValue("U_Deposito", row).ToString());
+                oDBDataSource.SetValue("U_PedTax", offset, oDataTable.GetValue("U_PedTax", row).ToString());
+            }
+
+            oMatrix.LoadFromDataSource();
+            oMatrix.AutoResizeColumns();
+            oMatrix.SelectionMode = BoMatrixSelect.ms_Auto;
+            oMatrix.ClickAfter += matrixData_ClickAfter;
+
+            return oMatrix;
+        }
+
+        void oColumn_ChooseFromListAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            SAPApp.StatusBar.SetText("Adahuda uahd uadhu", BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning);
+        }
+
+        public void OnChooseFromList(ItemEvent pVal)
+        {
+            SAPbouiCOM.IChooseFromListEvent oCFLEvento = (SAPbouiCOM.IChooseFromListEvent)pVal;
+            string sCFL_ID = oCFLEvento.ChooseFromListUID;
+            SAPbouiCOM.ChooseFromList oCFL;
+            oCFL = oForm.ChooseFromLists.Item(sCFL_ID);
+            
+            if (oCFLEvento.BeforeAction == false)
+            {
+                SAPbouiCOM.DataTable oDataTable = oCFLEvento.SelectedObjects;
+            }
+        }
+
+        public void CriarFormularioFiltros()
+        {
+            oItem = oForm.Items.Add("lblCodPN", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Código do Fornecedor";
+            oItem.Top = 5;
+            oItem.Left = 15;
+            oItem.Width = 110;
+
+            oItem = oForm.Items.Add("txtCodPN", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = 5;
+            oItem.Left = 135;
+            oItem.Width = 150;
+
+            oItem = oForm.Items.Add("lkbCodPN", SAPbouiCOM.BoFormItemTypes.it_LINKED_BUTTON);
+            oItem.LinkTo = "txtCodPN";
+            oItem.Top = 5;
+            oItem.Left = 115;
+            oItem.Width = 20;
+            ((SAPbouiCOM.LinkedButton)oItem.Specific).LinkedObject = BoLinkedObject.lf_BusinessPartner;
+
+
+
+            oItem = oForm.Items.Add("lblPedido", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Código do Pedido";
+            oItem.Top = 25;
+            oItem.Left = 15;
+            oItem.Width = 100;
+
+            oItem = oForm.Items.Add("cflPedido", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            //oItem = oForm.Items.Add("txtPedido", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = 25;
+            oItem.Left = 135;
+            oItem.Width = 150;
+            SAPbouiCOM.ChooseFromListCollection oCFLs = oForm.ChooseFromLists;
+            SAPbouiCOM.ChooseFromListCreationParams oCFLCreationParams = (SAPbouiCOM.ChooseFromListCreationParams)SAPApp.CreateObject(SAPbouiCOM.BoCreatableObjectType.cot_ChooseFromListCreationParams);
+            oCFLCreationParams.MultiSelection = true;
+            oCFLCreationParams.ObjectType = "22";
+            oCFLCreationParams.UniqueID = "CFL_PO";
+            SAPbouiCOM.ChooseFromList oCFL = oCFLs.Add(oCFLCreationParams);
+
+            oForm.DataSources.DBDataSources.Add("@SLTIMPRT1");
+
+            oEditText = ((SAPbouiCOM.EditText)oItem.Specific);
+            oEditText.DataBind.SetBound(true, "@SLTIMPRT1", "Object");
+            oEditText.ChooseFromListUID = "CFL_PO";
+            oEditText.ChooseFromListAlias = "DocNum";
+            oEditText.ChooseFromListAfter += oColumn_ChooseFromListAfter;
+
+
+            oItem = oForm.Items.Add("lkbPedido", SAPbouiCOM.BoFormItemTypes.it_LINKED_BUTTON);
+            oItem.LinkTo = "cflPedido";
+            oItem.Top = 25;
+            oItem.Left = 115;
+            oItem.Width = 20;
+            ((SAPbouiCOM.LinkedButton)oItem.Specific).LinkedObject = BoLinkedObject.lf_PurchaseOrder;
+
+
+
+
+            //oItem = oForm.Items.Add("cflPedido", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            //oItem.Top = 25;
+            //oItem.Left = 290;
+            //oItem.Width = 50;
+
+
+            //SAPbouiCOM.ChooseFromListCreationParams CFL_PO = new ChooseFromListCreationParams();
+            //CFL_PO.ObjectType = "";
+
+            //SAPbouiCOM.Conditions oCons = null;
+            //SAPbouiCOM.Condition oCon = null;
+            
+        }
+
+        public void CriarFormularioDefault()
+        {
+            oItem = oForm.Items.Add("lblEntry", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Nº";
+            oItem.Top = 5;
+            oItem.Left = oForm.Width - 245;
+            oItem.Width = 50;
+
+            oItem = oForm.Items.Add("3", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = 5;
+            oItem.Left = oForm.Width - 180;
+            oItem.Width = 150;
+            oEditText = (SAPbouiCOM.EditText)oItem.Specific;
+
+            // Now bind Columns to UDO Objects in Add Mode
+            oEditText.DataBind.SetBound(true, "@SLTIMPORT", "DocEntry");
+            //oMatrix.Columns.Item("oClmn0").DataBind.SetBound(true, "@SLTIMPRT1", "DocEntry");
+            oForm.DataBrowser.BrowseBy = "3";
+
+
+
+            oItem = oForm.Items.Add("lblStatus", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Status";
+            oItem.Top = 25;
+            oItem.Left = oForm.Width - 245;
+            oItem.Width = 50;
+
+            oItem = oForm.Items.Add("ddlStatus", SAPbouiCOM.BoFormItemTypes.it_COMBO_BOX);
+            oItem.Top = 25;
+            oItem.Left = oForm.Width - 180;
+            oItem.Width = 150;
+            oComboBox = (SAPbouiCOM.ComboBox)oItem.Specific;
+            oComboBox.ValidValues.Add(string.Empty, " - ");
+            oComboBox.ValidValues.Add("O", "Aberto");
+            oComboBox.ValidValues.Add("C", "Fechado");
+            oComboBox.DataBind.SetBound(true, "@SLTIMPORT", "Status");
+
+
+
+            oItem = oForm.Items.Add("lblData", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Data";
+            oItem.Top = 45;
+            oItem.Left = oForm.Width - 245;
+            oItem.Width = 50;
+
+            oItem = oForm.Items.Add("txtData", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = 45;
+            oItem.Left = oForm.Width - 180;
+            oItem.Width = 150;
+            oEditText = (SAPbouiCOM.EditText)oItem.Specific;
+            oEditText.DataBind.SetBound(true, "@SLTIMPORT", "CreateDate");
+
+
+
+            oItem = oForm.Items.Add("1", SAPbouiCOM.BoFormItemTypes.it_BUTTON);
+            oItem.Top = oForm.Height - 70;
+            oItem.Left = 10;
+
+            oItem = oForm.Items.Add("2", SAPbouiCOM.BoFormItemTypes.it_BUTTON);
+            oItem.Top = oForm.Height - 70;
+            oItem.Left = 120;
+
+            oItem = oForm.Items.Add("btnNF", SAPbouiCOM.BoFormItemTypes.it_BUTTON);
+            oItem.Top = oForm.Height - 70;
+            oItem.Left = oForm.Width - 85;
+            var btn = (SAPbouiCOM.Button)oItem.Specific;
+            btn.Caption = "Nota Fiscal";
+            btn.ClickAfter += btn_ClickAfter;
+        }
+
+        public void CriarFormularioFooter()
+        {
+            var top_position_base = oMatrix.Item.Top + oMatrix.Item.Height + 10;
+            var left_position_base = 15;
+
+            oItem = oForm.Items.Add("lblTaxaDI", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Taxa DI";
+            oItem.Top = top_position_base;
+            oItem.Left = left_position_base;
+            oItem.Width = 100;
+
+            oItem = oForm.Items.Add("txtTaxaDI", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = top_position_base;
+            oItem.Left = left_position_base + 115;
+            oItem.Width = 150;
+
+            oItem = oForm.Items.Add("lblPesoTot", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Peso Total";
+            oItem.Top = top_position_base;
+            oItem.Left = oForm.Width - 245;
+            oItem.Width = 50;
+
+            oItem = oForm.Items.Add("txtPesoTot", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = top_position_base;
+            oItem.Left = oForm.Width - 180;
+            oItem.Width = 150;
+            oEditText = (SAPbouiCOM.EditText)oItem.Specific;
+
+
+
+
+            top_position_base += 25;
+
+            oItem = oForm.Items.Add("lblFrete", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Frete Internacional R$";
+            oItem.Top = top_position_base;
+            oItem.Left = left_position_base;
+            oItem.Width = 105;
+
+            oItem = oForm.Items.Add("txtFrete", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = top_position_base;
+            oItem.Left = left_position_base + 115;
+            oItem.Width = 150;
+
+
+            oItem = oForm.Items.Add("lblFOB", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "FOB Total";
+            oItem.Top = top_position_base;
+            oItem.Left = oForm.Width - 245;
+            oItem.Width = 50;
+
+            oItem = oForm.Items.Add("txtFOB", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = top_position_base;
+            oItem.Left = oForm.Width - 180;
+            oItem.Width = 150;
+            oEditText = (SAPbouiCOM.EditText)oItem.Specific;
+
+
+
+            top_position_base += 25;
+            oItem = oForm.Items.Add("lblOutDesp", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Outras Despesas";
+            oItem.Top = top_position_base;
+            oItem.Left = left_position_base;
+            oItem.Width = 100;
+
+            oItem = oForm.Items.Add("txtOutDesp", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = top_position_base;
+            oItem.Left = left_position_base + 115;
+            oItem.Width = 150;
+
+
+
+            oItem = oForm.Items.Add("lblTotal2", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Total II";
+            oItem.Top = top_position_base;
+            oItem.Left = oForm.Width - 245;
+            oItem.Width = 50;
+
+            oItem = oForm.Items.Add("txtTotal2", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = top_position_base;
+            oItem.Left = oForm.Width - 180;
+            oItem.Width = 150;
+            oEditText = (SAPbouiCOM.EditText)oItem.Specific;
+
+            top_position_base += 25;
+            oItem = oForm.Items.Add("lblCntner", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Container";
+            oItem.Top = top_position_base;
+            oItem.Left = left_position_base;
+            oItem.Width = 100;
+
+            oItem = oForm.Items.Add("txtCntner", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = top_position_base;
+            oItem.Left = left_position_base + 115;
+            oItem.Width = 150;
+
+
+            oItem = oForm.Items.Add("lblTotal", SAPbouiCOM.BoFormItemTypes.it_STATIC);
+            ((StaticText)oItem.Specific).Caption = "Total";
+            oItem.Top = top_position_base;
+            oItem.Left = oForm.Width - 245;
+            oItem.Width = 50;
+
+            oItem = oForm.Items.Add("txtTotal", SAPbouiCOM.BoFormItemTypes.it_EDIT);
+            oItem.Top = top_position_base;
+            oItem.Left = oForm.Width - 180;
+            oItem.Width = 150;
+            oEditText = (SAPbouiCOM.EditText)oItem.Specific;
+        }
+
+        void btn_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            SAPApp.StatusBar.SetText("Clicou no NF", BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning);
         }
 
         #region Events
-        
+
         void Form_ResizeAfter(SBOItemEventArg pVal)
         {
-            matrixData.LoadFromDataSource();
-            matrixData.AutoResizeColumns();
+            oMatrix.LoadFromDataSource();
+            oMatrix.AutoResizeColumns();
         }
+
+        /*
+        void matrixData_ClickAfterOld(object sboObject, SBOItemEventArg pVal)
+        {
+            if (pVal.ColUID.Equals("oClmn0"))
+            {
+                SAPbouiCOM.DBDataSource oDBDataSource = oForm.DataSources.DBDataSources.Item(1);
+                oDBDataSource.SetValue("Selected", pVal.Row, pVal.ActionSuccess ? "Y" : "N");
+                Calcular();
+            }
+        }
+         */
 
         void matrixData_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            if (pVal.ColUID.Equals("#"))
+            if (pVal.ColUID.Equals("oClmn0"))
             {
-                this.dtDados.SetValue("Selected", pVal.Row, pVal.ActionSuccess ? "Y" : "N");
+                SAPbouiCOM.DBDataSource oDBDataSource = oForm.DataSources.DBDataSources.Item(1);
+                oDBDataSource.SetValue("Selected", pVal.Row, pVal.ActionSuccess ? "Y" : "N");
                 Calcular();
             }
         }
 
+        private void Calcular()
+        {
+            SAPApp.StatusBar.SetText("Atualizando os valores, aguarde alguns instantes!", BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning);
+            SAPApp.Forms.ActiveForm.Freeze(true);
+
+            var columns = oMatrix.Columns;
+            double total = 0;
+            double price = 0;
+            double qtd = 0;
+            double peso = 0;
+
+            bool selected = false;
+            SAPbouiCOM.DBDataSource oDBDataSource = oForm.DataSources.DBDataSources.Item(1);
+
+            for (int i = 0; i < oDBDataSource.Size; i++)
+            {
+                selected = oDBDataSource.GetValue("Selected", i).ToString().Equals("Y");
+
+                if (selected)
+                {
+                    //price += Convert.ToDouble(this.dtDados.GetValue("U_PedTax", i));
+                    //qtd += Convert.ToDouble(this.dtDados.GetValue("U_QtdDisp", i));
+                    //peso += Convert.ToDouble(this.dtDados.GetValue("U_Peso", i));
+                    total += price * qtd;
+                }
+            }
+
+            //txtPeso.Value = peso.ToString("N3");
+            //txtTotal_II.Value = price.ToString("N2");
+            //txtTotalFOB.Value = price.ToString("N2");
+            //txtTotalRS.Value = total.ToString("N2");
+
+            SAPApp.StatusBar.SetText("Valores atualizados!", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
+            SAPApp.Forms.ActiveForm.Freeze(false);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
         private void txtCodePN_LostFocusAfter(object sboObject, SBOItemEventArg pVal)
         {
             if (filtroCodigoPN != txtCodePN.Value)
@@ -218,53 +864,79 @@ namespace SLT.ImportacaoNF
 
         private void Form_ActivateAfter(SBOItemEventArg pVal)
         {
-            //change focus
             this.GetItem("lblCdPN").Click();
 
             if (this.UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_FIND_MODE)
             {
-                                this.GetItem("txtCodPN").Enabled = false;
-                this.GetItem("txtPedido").Enabled = false;
-                this.GetItem("txtProces").Enabled = false;
+                EnableField("txtCodPN");
+                EnableField("txtPedido");
+                EnableField("txtProces");
+                EnableField("txtEntry");
                 txtDataDocumento.Value = string.Empty;
-                cbStatus.Select(0, BoSearchKey.psk_Index);
-                this.GetItem("cbStatus").Enabled = true;
+
+                cbStatus.Select(1, BoSearchKey.psk_Index);
+                EnableField("cbStatus", true);
             }
             else if (this.UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_ADD_MODE)
             {
-                this.GetItem("txtCodPN").Enabled = true;
-                this.GetItem("txtPedido").Enabled = true;
-                this.GetItem("txtProces").Enabled = true;
+                EnableField("txtCodPN");
+                EnableField("txtPedido");
+                EnableField("txtProces");
+                EnableField("txtEntry", false);
                 txtDocEntry.Value = ConexaoSAP.Company.GetNewObjectKey();
                 txtDataDocumento.Value = DateTime.Today.ToShortDateString();
-                cbStatus.Select(0, BoSearchKey.psk_Index);
-                this.GetItem("cbStatus").Enabled = false;
+
+                cbStatus.Select(1, BoSearchKey.psk_Index);
+                EnableField("cbStatus");
 
             }
             else if (this.UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_EDIT_MODE)
             {
-                this.GetItem("txtCodPN").Enabled = false;
-                this.GetItem("txtPedido").Enabled = false;
-                this.GetItem("txtProces").Enabled = false;
+                EnableField("txtCodPN", false);
+                EnableField("txtPedido", false);
+                EnableField("txtProces", false);
+                EnableField("txtEntry", false);
                 txtDocEntry.Value = string.Empty;
                 txtDataDocumento.Value = string.Empty;
                 cbStatus.Select(0, BoSearchKey.psk_Index);
-                this.GetItem("cbStatus").Enabled = false;
+                EnableField("cbStatus");
             }
             else if (this.UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_UPDATE_MODE)
             {
-                this.GetItem("txtCodPN").Enabled = false;
-                this.GetItem("txtPedido").Enabled = false;
-                this.GetItem("txtProces").Enabled = false;
+                EnableField("txtCodPN", false);
+                EnableField("txtPedido", false);
+                EnableField("txtProces", false);
+                EnableField("txtEntry", false);
                 txtDataDocumento.Value = string.Empty;
-                this.GetItem("cbStatus").Enabled = false;
+                EnableField("cbStatus");
+            }
+        }
+
+        private void EnableField(string fieldname, bool enable = true)
+        {
+            try
+            {
+                this.GetItem(fieldname).Enabled = enable;
+            }
+            catch (Exception ex)
+            {
+                //throw;
             }
         }
 
         private void btnSalvar_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            Salvar();
+            var formMode = (SAPbouiCOM.BoFormMode)pVal.FormMode;
+
+            if (formMode == SAPbouiCOM.BoFormMode.fm_ADD_MODE || formMode == SAPbouiCOM.BoFormMode.fm_UPDATE_MODE || formMode == SAPbouiCOM.BoFormMode.fm_EDIT_MODE)
+            {
+                Salvar();
+            }
+            else if (formMode == SAPbouiCOM.BoFormMode.fm_FIND_MODE)
+            {
+                FindData();
+            }
         }
 
         private void btnCancelar_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
@@ -367,6 +1039,46 @@ namespace SLT.ImportacaoNF
             return query;
         }
 
+        private string QueryCarregar(int docEntry)
+        {
+            string query = "SELECT " +
+                           " 'Y' AS Selected" +
+                           " ,[DocEntry]    " +
+                           " ,[U_PedidoId]  AS DocNum " +
+                           " ,[U_ItemNum]   AS LineNum " +
+                           " ,[U_ItemCode]  AS ItemCode, " +
+                           " '' AS Dscription, " +
+                           " '' AS Price, " +
+                           " '' AS TotalFrgn, " +
+                           " '' AS LineTotal, " +
+                           " '' AS OpenQty, " +
+                           " '' AS Quantity, " +
+                           " '' AS unitMsr, " +
+                           " '' AS Peso, " +
+                           " '' AS NumPerMsr, " +
+                           " '' AS NcmCode, " +
+                           " '' AS VisOrder, " +
+                           " '' AS TaxRate" +
+                //" ,[LineId]      " +
+                //" ,[VisOrder]    " +
+                //" ,[Object]      " +
+                //" ,[LogInst]     " +
+                //" ,[U_QtdPed]    " +
+                //" ,[U_QtdDisp]   " +
+                //" ,[U_QtdFat]    " +
+                //" ,[U_Peso]     as Peso " +
+                //" ,[U_Frete]     " +
+                //" ,[U_OutroDes]  " +
+                //" ,[U_Deposito]  " +
+                //" ,[U_PedTax]    " +
+                           " FROM [@SLTIMPRT1] " +
+                           " WHERE DocEntry = " + docEntry +
+                           " ORDER BY " +
+                           " LineId ";
+
+            return query;
+        }
+
         private string QueryCarregar(String codigoImportacao)
         {
             string query = "SELECT " +
@@ -407,11 +1119,11 @@ namespace SLT.ImportacaoNF
             return query;
         }
 
-
-        #endregion Repository
+        #endregion Repository 
 
         #region SELECT
 
+         
         public string RetornaFornecedor(int docEntry)
         {
             return GetRecordsetAsString(String.Format("SELECT CardCode As CODFORNECEDOR FROM OPOR WHERE DocEntry = {0}", docEntry));
@@ -461,7 +1173,7 @@ namespace SLT.ImportacaoNF
         {
             return GetRecordsetAsString(String.Format("SELECT ISNULL(U_DocEntry,0) AS NRIMPORT FROM [@ALFT_IMPORT] WHERE U_DocEntry = {0}", docEntry));
         }
-
+         * 
         #endregion Consultas
 
         #region Insert
@@ -561,6 +1273,8 @@ namespace SLT.ImportacaoNF
         }
 
         #endregion
+        
+        */
 
         #region Utils
 
@@ -579,7 +1293,7 @@ namespace SLT.ImportacaoNF
 
         #endregion
 
-
+        /*
 
         private void CreateEmptyMatrix()
         {
@@ -605,7 +1319,7 @@ namespace SLT.ImportacaoNF
             AddMatrixColumn(columns, BoFormItemTypes.it_EDIT, "TaxRate", "TaxRate", false);
 
             this.matrixData.SelectionMode = BoMatrixSelect.ms_Auto;
-            matrixData.ClickAfter += matrixData_ClickAfter;
+            matrixData.ClickAfter += matrixData_ClickAfterOld;
 
             matrixData.AutoResizeColumns();
         }
@@ -629,9 +1343,15 @@ namespace SLT.ImportacaoNF
             BindMatrixColumn(columns.Item(14), dataTableId, "TaxRate");
         }
 
-        private void LoadData()
+        private void FindData()
         {
             SAPApp.Forms.ActiveForm.Freeze(true);
+
+            if (!String.IsNullOrWhiteSpace(txtDocEntry.Value))
+            {
+                LoadData();
+                return;
+            }
 
             // load the data into the rows
             string pn = txtCodePN.Value;
@@ -658,40 +1378,7 @@ namespace SLT.ImportacaoNF
             SAPApp.Forms.ActiveForm.Freeze(false);
         }
 
-        private void Calcular()
-        {
-            SAPApp.StatusBar.SetText("Atualizando os valores, aguarde alguns instantes!", BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning);
-            SAPApp.Forms.ActiveForm.Freeze(true);
-
-            var columns = this.matrixData.Columns;
-            double total = 0;
-            double price = 0;
-            double qtd = 0;
-            double peso = 0;
-
-            bool selected = false;
-
-            for (int i = 0; i < this.dtDados.Rows.Count; i++)
-            {
-                selected = this.dtDados.GetValue("Selected", i).ToString().Equals("Y");
-
-                if (selected)
-                {
-                    price += Convert.ToDouble(this.dtDados.GetValue("Price", i));
-                    qtd += Convert.ToDouble(this.dtDados.GetValue("Quantity", i));
-                    peso += Convert.ToDouble(this.dtDados.GetValue("Peso", i));
-                    total += price * qtd;
-                }
-            }
-
-            txtPeso.Value = peso.ToString("N3");
-            txtTotal_II.Value = price.ToString("N2");
-            txtTotalFOB.Value = price.ToString("N2");
-            txtTotalRS.Value = total.ToString("N2");
-
-            SAPApp.StatusBar.SetText("Valores atualizados!", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
-            SAPApp.Forms.ActiveForm.Freeze(false);
-        }
+    
 
         private Column AddMatrixColumn(Columns columns, BoFormItemTypes formItemTypes, string columnName, string columnTitleCaption = null, bool editable = true)
         {
@@ -743,22 +1430,24 @@ namespace SLT.ImportacaoNF
             if (!continuar)
                 SAPApp.StatusBar.SetText("Atualização de dados cancelada!", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Warning);
             else
-                LoadData();
+                FindData();
 
             return continuar;
         }
+
+        */
 
         private void Salvar()
         {
             SAPApp.StatusBar.SetText("Salvando, aguarde alguns instantes...", BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning);
 
-            var columns = this.matrixData.Columns;
+            var columns = oMatrix.Columns;
             var docEntry = 0;
             bool selected = false;
 
             GeneralService oGeneralService = ConexaoSAP.Company.GetCompanyService().GetGeneralService("OSLT_IMPORT");
             GeneralData oGeneralData = (GeneralData)oGeneralService.GetDataInterface(SAPbobsCOM.GeneralServiceDataInterfaces.gsGeneralData);
-            
+
             if (docEntry > 0)
             {
                 GeneralDataParams headerParams = (GeneralDataParams)oGeneralService.GetDataInterface(GeneralServiceDataInterfaces.gsGeneralDataParams);
@@ -777,9 +1466,10 @@ namespace SLT.ImportacaoNF
             oGeneralData.SetProperty("U_Total", "0");
             oGeneralData.SetProperty("U_TaxLine", "0");
 
-            for (int i = 0; i < this.dtDados.Rows.Count; i++)
+            //for (int i = 0; i < this.dtDados.Rows.Count; i++)
+            for (int i = 0; i < 0; i++)
             {
-                selected = this.dtDados.GetValue("Selected", i).ToString().Equals("Y");
+                // selected = this.dtDados.GetValue("Selected", i).ToString().Equals("Y");
 
                 if (selected)
                 {
@@ -828,12 +1518,87 @@ namespace SLT.ImportacaoNF
             SAPApp.StatusBar.SetText("Salvo com sucesso!", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
         }
 
+        private void LoadData()
+        {
+            var columns = oMatrix.Columns;
+            int docEntry = 0;
+
+            // if (int.TryParse(txtDocEntry.Value, out docEntry))
+            if (int.TryParse("", out docEntry))
+            {
+                SAPApp.StatusBar.SetText("Carregando, aguarde alguns instantes...", BoMessageTime.bmt_Medium, BoStatusBarMessageType.smt_Warning);
+                GeneralService oGeneralService = ConexaoSAP.Company.GetCompanyService().GetGeneralService("OSLT_IMPORT");
+                GeneralData oGeneralData = (GeneralData)oGeneralService.GetDataInterface(SAPbobsCOM.GeneralServiceDataInterfaces.gsGeneralData);
+
+                if (docEntry > 0)
+                {
+                    GeneralDataParams headerParams = (GeneralDataParams)oGeneralService.GetDataInterface(GeneralServiceDataInterfaces.gsGeneralDataParams);
+                    headerParams.SetProperty("DocEntry", docEntry);
+                    oGeneralData = oGeneralService.GetByParams(headerParams);
+                }
+
+                this.UIAPIRawForm.Mode = BoFormMode.fm_OK_MODE;
+
+                GeneralDataCollection generalServiceItem = oGeneralData.Child("SLTIMPRT1");
+                oMatrix.Clear();
+
+                //this.dtDados.ExecuteQuery(this.QueryCarregar(docEntry));
+
+                var dataTableId = "dtDados";
+                //BindData(columns, dataTableId);
+                oMatrix.LoadFromDataSource();
+                oMatrix.AutoResizeColumns();
+
+
+
+
+
+
+
+                //oGeneralData.SetProperty("U_TaxId", "0");
+                //oGeneralData.SetProperty("U_FreteInt", "0");
+                //oGeneralData.SetProperty("U_OutDesp", "0");
+                //oGeneralData.SetProperty("U_Container", "0");
+                //oGeneralData.SetProperty("U_TotalPes", "0");
+                //oGeneralData.SetProperty("U_TotalFOB", "0");
+                //oGeneralData.SetProperty("U_Total", "0");
+                //oGeneralData.SetProperty("U_TaxLine", "0");
+
+                //for (int i = 0; i < this.dtDados.Rows.Count; i++)
+                //{
+                //    selected = this.dtDados.GetValue("Selected", i).ToString().Equals("Y");
+
+                //    if (selected)
+                //    {
+                //        var item = generalServiceItem.Add();
+                //        item.SetProperty("U_PedidoId", "0");
+                //        item.SetProperty("U_ItemNum", "0");
+                //        item.SetProperty("U_ItemCode", "0");
+                //        // item.SetProperty("U_Descript", "0"); Dscription
+                //        //item.SetProperty("U_PrecoUni", "0");
+                //        //item.SetProperty("U_PrecoTot", "0");
+                //        item.SetProperty("U_QtdPed", "0");
+                //        item.SetProperty("U_QtdDisp", "0");
+                //        item.SetProperty("U_QtdFat", "0");
+                //        //item.SetProperty("U_Unit", "0");
+                //        item.SetProperty("U_Peso", "0");
+                //        item.SetProperty("U_Frete", "0");
+                //        item.SetProperty("U_OutroDes", "0");
+                //        item.SetProperty("U_Deposito", "0");
+                //        item.SetProperty("U_PedTax", "0");
+                //    }
+                //}
+
+                SAPApp.StatusBar.SetText("Carregado com sucesso!", BoMessageTime.bmt_Short, BoStatusBarMessageType.smt_Success);
+            }
+        }
+
         private void Cancelar()
         {
 
         }
 
-        #endregion Methods 
+        #endregion Methods
 
 
 
