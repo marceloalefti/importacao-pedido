@@ -14,6 +14,7 @@ namespace SLT.ImportacaoNF
 
         /// <summary>
         /// The main entry point for the application.
+        /// C:\Program Files (x86)\SAP\SAP Business One SDK\Tools\AddOnRegDataGen
         /// </summary>
         [STAThread]
         static void Main(string[] args)

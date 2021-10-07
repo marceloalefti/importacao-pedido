@@ -119,14 +119,13 @@ namespace SLT.ImportacaoNF.Utils
             UserField field = null;
             field = new UserField();
             field.Tabela = table;
-            field.Descricao = "Tax Id";
+            field.Descricao = "Taxa DI";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
-            field.Name = "TaxId";
-            field.Size = 8;
-            field.Type = SAPbobsCOM.BoFieldTypes.db_Numeric;
-            field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
+            field.Name = "TaxaDI";
+            field.Size = 19;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
+            field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
             table.Campos.Add(field);
-            udo.CamposBusca.Add(field);
 
             field = null;
             field = new UserField();
@@ -134,11 +133,10 @@ namespace SLT.ImportacaoNF.Utils
             field.Descricao = "Frete Internacional";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
             field.Name = "FreteInt";
-            field.Size = 10;
+            field.Size = 19;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
-            table.Campos.Add(field);
-            udo.CamposBusca.Add(field);
+            table.Campos.Add(field); 
 
             field = null;
             field = new UserField();
@@ -146,23 +144,21 @@ namespace SLT.ImportacaoNF.Utils
             field.Descricao = "Outras despesas";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
             field.Name = "OutDesp";
-            field.Size = 10;
+            field.Size = 19;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
-            table.Campos.Add(field);
-            udo.CamposBusca.Add(field);
+            table.Campos.Add(field); 
 
             field = null;
             field = new UserField();
             field.Tabela = table;
             field.Descricao = "Container";
-            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
+            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tNO;
             field.Name = "Container";
             field.Size = 16;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
-            table.Campos.Add(field);
-            udo.CamposBusca.Add(field);
+            table.Campos.Add(field); 
 
             field = null;
             field = new UserField();
@@ -170,11 +166,10 @@ namespace SLT.ImportacaoNF.Utils
             field.Descricao = "Peso Total";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
             field.Name = "TotalPes";
-            field.Size = 10;
+            field.Size = 19;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_Quantity;
-            table.Campos.Add(field);
-            udo.CamposBusca.Add(field);
+            table.Campos.Add(field); 
 
             field = null;
             field = new UserField();
@@ -182,34 +177,31 @@ namespace SLT.ImportacaoNF.Utils
             field.Descricao = "Total FOB";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
             field.Name = "TotalFOB";
-            field.Size = 10;
+            field.Size = 19;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
-            table.Campos.Add(field);
-            udo.CamposBusca.Add(field);
+            table.Campos.Add(field); 
 
             field = null;
+            field = new UserField();
+            field.Tabela = table;
+            field.Descricao = "Total II";
+            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
+            field.Name = "Total2";
+            field.Size = 19;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
+            field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
+            table.Campos.Add(field); 
+
             field = new UserField();
             field.Tabela = table;
             field.Descricao = "Total";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
             field.Name = "Total";
-            field.Size = 10;
+            field.Size = 19;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
-            table.Campos.Add(field);
-            udo.CamposBusca.Add(field);
-
-            field = new UserField();
-            field.Tabela = table;
-            field.Descricao = "Tax Val Line";
-            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
-            field.Name = "TaxLine";
-            field.Size = 10;
-            field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
-            field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
-            table.Campos.Add(field);
-            udo.CamposBusca.Add(field);
+            table.Campos.Add(field); 
 
             new UserTableRepository().Salvar(table);
         }
@@ -224,15 +216,49 @@ namespace SLT.ImportacaoNF.Utils
 
             // CAMPOS
             UserField field = null;
+
+            field = new UserField();
+            field.Tabela = table;
+            field.Descricao = "Item Selecionado";
+            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
+            field.Name = "Selected";
+            field.Size = 8;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
+            field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
+            field.ValoresList = new List<UserFieldValue>();
+            field.ValoresList.Add(new UserFieldValue("Y", "Yes"));
+            field.ValoresList.Add(new UserFieldValue("N", "No"));
+            table.Campos.Add(field);
+
+            field = new UserField();
+            field.Tabela = table;
+            field.Descricao = "Código do Fornecedor";
+            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
+            field.Name = "CardCode";
+            field.Size = 8;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
+            field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
+            table.Campos.Add(field);
+
             field = new UserField();
             field.Tabela = table;
             field.Descricao = "Código do Pedido";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
             field.Name = "PedidoId";
             field.Size = 8;
-            field.Type = SAPbobsCOM.BoFieldTypes.db_Numeric;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
             table.Campos.Add(field);
+
+            field = new UserField();
+            field.Tabela = table;
+            field.Descricao = "Número do Pedido";
+            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
+            field.Name = "PedidoNr";
+            field.Size = 8;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
+            field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
+            table.Campos.Add(field); 
 
             field = new UserField();
             field.Tabela = table;
@@ -249,8 +275,8 @@ namespace SLT.ImportacaoNF.Utils
             field.Descricao = "Item Code";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
             field.Name = "ItemCode";
-            field.Size = 8;
-            field.Type = SAPbobsCOM.BoFieldTypes.db_Numeric;
+            field.Size = 100;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
             table.Campos.Add(field);
 
@@ -262,6 +288,7 @@ namespace SLT.ImportacaoNF.Utils
             field.Size = 200;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
+            table.Campos.Add(field);
 
             field = new UserField();
             field.Tabela = table;
@@ -271,15 +298,17 @@ namespace SLT.ImportacaoNF.Utils
             field.Size = 19;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
-
+            table.Campos.Add(field);
+            
             field = new UserField();
             field.Tabela = table;
-            field.Descricao = "Preço Total";
+            field.Descricao = "Preço Internacional";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
-            field.Name = "PrecoTot";
+            field.Name = "PrecoInt";
             field.Size = 19;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
+            table.Campos.Add(field);
 
             field = new UserField();
             field.Tabela = table;
@@ -310,7 +339,6 @@ namespace SLT.ImportacaoNF.Utils
             field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_Quantity;
             table.Campos.Add(field);
-            udo.CamposBusca.Add(field);
 
             field = new UserField();
             field.Tabela = table;
@@ -320,6 +348,7 @@ namespace SLT.ImportacaoNF.Utils
             field.Size = 8;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Numeric;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
+            table.Campos.Add(field);
 
             field = new UserField();
             field.Tabela = table;
@@ -329,6 +358,16 @@ namespace SLT.ImportacaoNF.Utils
             field.Size = 19;
             field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_Measurement;
+            table.Campos.Add(field);
+
+            field = new UserField();
+            field.Tabela = table;
+            field.Descricao = "Código NCM";
+            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
+            field.Name = "NcmCode";
+            field.Size = 8;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
+            field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
             table.Campos.Add(field);
 
             field = new UserField();
@@ -357,7 +396,7 @@ namespace SLT.ImportacaoNF.Utils
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
             field.Name = "Deposito";
             field.Size = 8;
-            field.Type = SAPbobsCOM.BoFieldTypes.db_Numeric;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
             table.Campos.Add(field);
 
@@ -365,11 +404,31 @@ namespace SLT.ImportacaoNF.Utils
             field.Tabela = table;
             field.Descricao = "Imposto do Pedido";
             field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
-            field.Name = "PedTax";
+            field.Name = "Imposto";
             field.Size = 8;
-            field.Type = SAPbobsCOM.BoFieldTypes.db_Numeric;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
             field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
             table.Campos.Add(field);
+
+            field = new UserField();
+            field.Tabela = table;
+            field.Descricao = "Alíquota do Imposto";
+            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
+            field.Name = "Aliquota";
+            field.Size = 8;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Float;
+            field.SubType = SAPbobsCOM.BoFldSubTypes.st_Price;
+            table.Campos.Add(field);
+
+            field = new UserField();
+            field.Tabela = table;
+            field.Descricao = "Utilização do Item";
+            field.Mandatory = SAPbobsCOM.BoYesNoEnum.tYES;
+            field.Name = "Utiliza";
+            field.Size = 8;
+            field.Type = SAPbobsCOM.BoFieldTypes.db_Alpha;
+            field.SubType = SAPbobsCOM.BoFldSubTypes.st_None;
+            table.Campos.Add(field);           
 
             new UserTableRepository().Salvar(table);
             return table;
